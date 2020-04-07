@@ -51,7 +51,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '首页', icon: 'dashboard' }
     }]
   },
 
@@ -155,6 +155,34 @@ export const constantRoutes = [
       {
         path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
         meta: { title: 'External Link', icon: 'link' }
+      }
+    ]
+  },
+
+  {
+    path: '/course-management',
+    component: Layout,
+    redirect: '/course-management/table',
+    name: 'CourseManagement',
+    meta: { title: '课程管理', icon: 'example' },
+    children: [
+      {
+        path: 'category',
+        name: 'Category',
+        component: () => import('@/views/course-management/category/index'),
+        meta: { title: '课程分类', icon: 'table' }
+      },
+      {
+        path: 'table',
+        name: 'Table',
+        component: () => import('@/views/table/index'),
+        meta: { title: '线上课程', icon: 'table' }
+      },
+      {
+        path: 'table',
+        name: 'Table',
+        component: () => import('@/views/table/index'),
+        meta: { title: '线下课程', icon: 'table' }
       }
     ]
   },

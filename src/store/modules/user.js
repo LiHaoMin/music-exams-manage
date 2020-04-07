@@ -6,7 +6,8 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    userType: 0
   }
 }
 
@@ -24,6 +25,9 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_USER_TYPE: (state, userType) => {
+    state.userType = userType
   }
 }
 
@@ -32,9 +36,10 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
+      login({ account: username.trim(), password: password }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
+        commit('SET_USER_TYPE', data.userType)
         setToken(data.token)
         resolve()
       }).catch(error => {
@@ -46,21 +51,23 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
-
-        if (!data) {
-          reject('Verification failed, please Login again.')
-        }
-
-        const { name, avatar } = data
-
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
+      // TODO 获取用户信息 http://122.51.51.37:9102/musicweb/doc.html#/default/user-controller/UpdateUserContentUsingPOST
+      // getInfo(state.token).then(response => {
+      //   const { data } = response
+      //
+      //   if (!data) {
+      //     reject('Verification failed, please Login again.')
+      //   }
+      //
+      //   const { name, avatar } = data
+      //
+      //   commit('SET_NAME', name)
+      //   commit('SET_AVATAR', avatar)
+      //   resolve(data)
+      // }).catch(error => {
+      //   reject(error)
+      // })
+      resolve()
     })
   },
 

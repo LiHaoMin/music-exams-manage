@@ -36,6 +36,11 @@ module.exports = {
       warnings: false,
       errors: true
     },
+    proxy: {
+      "/musicweb": {
+        target: "http://122.51.51.37:9102/musicweb"
+      }
+    },
     before: require('./mock/mock-server.js')
   },
   configureWebpack: {
