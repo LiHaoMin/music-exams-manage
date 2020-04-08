@@ -72,12 +72,16 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
+    switch (error.response.status) {
+      case 400:
+        Message({
+          message: '400 - 请求错误',
+          type: 'error',
+          duration: 5 * 1000
+        })
+        break
+    }
+
     return Promise.reject(error)
   }
 )

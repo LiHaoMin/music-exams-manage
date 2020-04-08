@@ -1,14 +1,11 @@
 <template>
-  <div>
-    <el-button type="success" @click="dialogFormVisible = true">添加分类</el-button>
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="加载中..."
-      border
-      fit
-      highlight-current-row
-    >
+  <div class="app-container">
+    <el-form :inline="true" class="demo-form-inline">
+      <el-form-item>
+        <el-button type="success" @click="handleAdd">添加分类</el-button>
+      </el-form-item>
+    </el-form>
+    <el-table v-loading="listLoading" :data="list" element-loading-text="加载中..." border fit highlight-current-row>
       <el-table-column align="center" label="排序">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
@@ -26,27 +23,12 @@
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <el-link :underline="false" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-link>
+          <el-link :underline="false" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-link>
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      background
-      layout="prev, pager, next"
-      @prev-click="prevClick"
-      @next-click="nextClick"
-      @current-change="currentChange"
-      :current-page="params.num"
-      :page-size="params.size"
-      :total="params.total"
-      :page-count="params.pages">
-    </el-pagination>
+    <pagination v-show="pagination.total > 0" :total="pagination.total" :page.sync="pagination.num" :limit.sync="pagination.size" @pagination="fetchData" />
     <el-dialog title="添加分类" :visible.sync="dialogFormVisible">
       <el-form :model="form">
         <el-form-item label="分类名称">
@@ -63,41 +45,29 @@
 
 <script>
 import request from '@/utils/request'
+import Pagination from '@/components/Pagination'
 
 export default {
   data() {
     return {
-      activeName: 'first',
       list: null,
       listLoading: true,
-      params: {
+      pagination: {
         num: 1,
         size: 10,
-        total: 1,
-        pages: 1
+        total: 0
       },
-      form: {
-        name: ''
-      },
+      form: {},
       dialogFormVisible: false
     }
   },
   created() {
     this.fetchData()
   },
+  components: {
+    Pagination
+  },
   methods: {
-    prevClick(page) {
-      this.params.num = page
-      this.fetchData()
-    },
-    nextClick(page) {
-      this.params.num = page
-      this.fetchData()
-    },
-    currentChange(page) {
-      this.params.num = page
-      this.fetchData()
-    },
     save() {
       if (this.form.id) {
         request({
@@ -107,7 +77,6 @@ export default {
         }).then((res) => {
           this.dialogFormVisible = false
           this.fetchData()
-          this.form = {}
         })
       } else {
         request({
@@ -117,9 +86,12 @@ export default {
         }).then((res) => {
           this.dialogFormVisible = false
           this.fetchData()
-          this.form = {}
         })
       }
+    },
+    handleAdd() {
+      this.form = {}
+      this.dialogFormVisible = true
     },
     handleEdit(idx, row) {
       this.form = {
@@ -129,24 +101,27 @@ export default {
       this.dialogFormVisible = true
     },
     handleDelete(idx, row) {
-      console.log(row)
+      request({
+        url: '/curriculum-classification/delete_classification',
+        method: 'get',
+        params: {
+          id: row.id
+        }
+      }).then((res) => {
+        this.fetchData()
+      })
     },
     fetchData() {
       this.listLoading = true
       request({
         url: '/curriculum-classification/first_class_classification',
         method: 'get',
-        params: this.params
+        params: this.pagination
       }).then((res) => {
         this.list = res.data.records
-        this.params.num = res.data.current
-        this.params.total = res.data.total
-        this.params.pages = res.data.pages
+        this.pagination.total = res.data.total
         this.listLoading = false
       })
-    },
-    handleClick(tab, event) {
-      console.log(tab, event)
     }
   }
 }
