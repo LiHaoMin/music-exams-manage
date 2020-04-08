@@ -185,9 +185,9 @@ export const constantRoutes = [
         meta: { title: '编辑课程', icon: 'table' }
       },
       {
-        path: 'table1',
-        name: 'Table1',
-        component: () => import('@/views/table/index'),
+        path: 'offline',
+        name: 'offline',
+        component: () => import('@/views/course-management/offline/index'),
         meta: { title: '线下课程', icon: 'table' }
       }
     ]

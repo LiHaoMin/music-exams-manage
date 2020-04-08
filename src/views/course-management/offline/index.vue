@@ -12,9 +12,9 @@
           <el-date-picker
             v-model="listQuery.time"
             type="daterange"
-            @change="dateChange"
             value-format="timestamp"
             range-separator="至"
+            @change="dateChange"
             start-placeholder="开始日期"
             end-placeholder="结束日期">
           </el-date-picker>
@@ -27,50 +27,42 @@
         </el-form-item>
       </div>
       <div>
-        <el-form-item size="small" label="上传人">
-          <el-select v-model="listQuery.userId" clearable  placeholder="请选择">
-            <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item size="small" label="一级分类">
-          <el-select v-model="listQuery.typeA" clearable  placeholder="请选择">
-            <el-option v-for="item in firstList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item size="small" label="讲堂分类">
-          <el-select v-model="listQuery.typeB" clearable  placeholder="请选择">
-            <el-option v-for="item in typeB" :key="item.value" :label="item.name" :value="item.value"></el-option>
+        <el-form-item size="small" label="分类">
+          <el-select v-model="listQuery.typeC" clearable  placeholder="请选择">
+            <el-option label="音乐考研" value="1"></el-option>
+            <el-option label="舞蹈考研" value="2"></el-option>
+            <el-option label="音乐留学" value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item size="small">
-          <el-button type="success" @click="recommend">设为推荐</el-button>
-        </el-form-item>
-        <el-form-item size="small">
-          <el-button type="success" @click="add">添加课程</el-button>
+          <el-button type="success" @click="add">添加实体课</el-button>
         </el-form-item>
       </div>
     </el-form>
     <el-table ref="listTable" v-loading="listLoading" :data="list" element-loading-text="加载中..." border fit highlight-current-row>
-      <el-table-column type="selection" align="center" label="排序">
-      </el-table-column>
-      <el-table-column align="center" label="一级分类">
+      <el-table-column align="center" label="分类">
         <template slot-scope="scope">
-          {{ scope.row.classificationtringName }}
+          {{ scope.row.typeC | category }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="讲堂分类">
-        <template slot-scope="scope">
-          {{ scope.row | category }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="名称">
+      <el-table-column align="center" label="实体课">
         <template slot-scope="scope">
           {{ scope.row.curriculumName }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="上架状态">
+      <el-table-column align="center" label="封面">
         <template slot-scope="scope">
-          {{ scope.row.upperShelf | states }}
+          // TODO 封面
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="描述">
+        <template slot-scope="scope">
+          // TODO 描述
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="添加时间">
+        <template slot-scope="scope">
+          {{ scope.row.gmtCreate | date}}
         </template>
       </el-table-column>
       <el-table-column align="center" label="价格">
@@ -83,14 +75,9 @@
           {{ scope.row.salesVolume }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="上传人">
+      <el-table-column align="center" label="状态">
         <template slot-scope="scope">
-          {{ scope.row.userName }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="上传时间">
-        <template slot-scope="scope">
-          {{ scope.row.gmtCreate | date}}
+          {{ scope.row.upperShelf | states }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
@@ -126,25 +113,18 @@ export default {
         upperShelf: null,
         time: null,
         curriculumName: null,
-        userId: null,
-        typeA: null,
-        typeB: null,
-        onLine: true
-      },
-      typeB: [
-        { name: '导师讲堂', value: 1 },
-        { name: '学长讲堂', value: 2 },
-        { name: '学员讲堂', value: 3 }
-      ],
-      userList: [],
-      firstList: []
+        typeC: null,
+        onLine: false
+      }
     }
+  },
+  components: {
+    Pagination
   },
   filters: {
     category(data) {
-      const typeB = ['', '导师讲堂', '学长讲堂', '学员讲堂']
-      const typeC = ['', '音乐', '舞蹈', '留学']
-      return typeB[data.typeB] + '-' + typeC[data.typeC] + '-' + data.classificationtringName
+      const typeC = ['', '音乐考研', '舞蹈考研', '留学考研']
+      return typeC[data]
     },
     states(data) {
       return data ? '上架' : '下架'
@@ -153,13 +133,8 @@ export default {
       return moment(data).format('YYYY-MM-DD HH:mm:ss')
     }
   },
-  components: {
-    Pagination
-  },
   created() {
     this.fetchData()
-    this.getUserList()
-    this.getFirstList()
   },
   methods: {
     dateChange(time) {
@@ -170,32 +145,11 @@ export default {
       this.pagination = { num: 1, size: 10 }
       this.fetchData()
     },
-    recommend() {
-      const selectionData = this.$refs.listTable.selection
-      if (selectionData.length < 1) {
-        this.$message({
-          type: 'info',
-          message: '未选中行'
-        })
-        return
-      }
-      let recommendData = []
-      selectionData.forEach((el) => {
-        recommendData.push({ id: el.id, recommend: true })
-      })
-      request({
-        url: '/curriculum/update_curriculum_list',
-        method: 'post',
-        data: recommendData
-      }).then((res) => {
-        console.log('sc：设为推荐')
-      })
+    handleEdit(idx, row) {
+      // TODO handleEdit
     },
     add() {
       // TODO add
-    },
-    handleEdit(idx, row) {
-      this.$router.push({ name: 'onlineEdit', params: { id: row.id }})
     },
     handleStatus(idx, row) {
       request({
@@ -245,26 +199,6 @@ export default {
         this.listLoading = false
       })
     },
-    getUserList() {
-      request({
-        url: '/user/upload_user_list',
-        method: 'get'
-      }).then((res) => {
-        this.userList = res.data
-      })
-    },
-    getFirstList() {
-      request({
-        url: '/curriculum-classification/first_class_classification',
-        method: 'get',
-        params: {
-          num: 1,
-          size: 100000
-        }
-      }).then((res) => {
-        this.firstList = res.data.records
-      })
-    }
   }
 }
 </script>
