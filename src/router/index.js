@@ -162,7 +162,6 @@ export const constantRoutes = [
   {
     path: '/course-management',
     component: Layout,
-    redirect: '/course-management/table',
     name: 'CourseManagement',
     meta: { title: '课程管理', icon: 'example' },
     children: [
@@ -173,14 +172,14 @@ export const constantRoutes = [
         meta: { title: '课程分类', icon: 'table' }
       },
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
+        path: 'online',
+        name: 'online',
+        component: () => import('@/views/course-management/online/index'),
         meta: { title: '线上课程', icon: 'table' }
       },
       {
-        path: 'table',
-        name: 'Table',
+        path: 'table1',
+        name: 'Table1',
         component: () => import('@/views/table/index'),
         meta: { title: '线下课程', icon: 'table' }
       }
