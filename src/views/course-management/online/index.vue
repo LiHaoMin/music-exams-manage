@@ -3,7 +3,7 @@
     <el-form :inline="true" class="demo-form-inline">
       <div>
         <el-form-item label="上架状态" size="small" >
-          <el-select v-model="listQuery.upperShelf" placeholder="请选择">
+          <el-select v-model="listQuery.upperShelf" clearable  placeholder="请选择">
             <el-option label="上架" value="true"></el-option>
             <el-option label="下架" value="false"></el-option>
           </el-select>
@@ -12,6 +12,7 @@
           <el-date-picker
             v-model="listQuery.time"
             type="daterange"
+            value-format="timestamp"
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期">
@@ -26,17 +27,17 @@
       </div>
       <div>
         <el-form-item size="small" label="上传人">
-          <el-select v-model="listQuery.userId" placeholder="请选择">
+          <el-select v-model="listQuery.userId" clearable  placeholder="请选择">
             <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item size="small" label="一级分类">
-          <el-select v-model="listQuery.typeA" placeholder="请选择">
+          <el-select v-model="listQuery.typeA" clearable  placeholder="请选择">
             <el-option v-for="item in firstList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item size="small" label="讲堂分类">
-          <el-select v-model="listQuery.typeB" placeholder="请选择">
+          <el-select v-model="listQuery.typeB" clearable  placeholder="请选择">
             <el-option v-for="item in typeB" :key="item.value" :label="item.name" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
@@ -156,6 +157,10 @@ export default {
   methods: {
     query() {
       this.pagination = { num: 1 }
+      if (this.listQuery.time) {
+        this.listQuery.startTime = this.listQuery.time[0]
+        this.listQuery.endTime = this.listQuery.time[1]
+      }
       this.fetchData()
     },
     fetchData() {
