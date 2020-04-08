@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
-    <el-form :inline="true" class="demo-form-inline">
-      <el-form-item>
+    <el-row type="flex" class="row-bg" justify="end">
+      <el-col :span="3">
         <el-button type="success" @click="handleAdd">添加分类</el-button>
-      </el-form-item>
-    </el-form>
+      </el-col>
+    </el-row>
     <el-table v-loading="listLoading" :data="list" element-loading-text="加载中..." border fit highlight-current-row>
       <el-table-column align="center" label="排序">
         <template slot-scope="scope">
@@ -135,3 +135,12 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .el-row {
+    margin-bottom: 20px;
+    &:last-child {
+       margin-bottom: 0;
+     }
+  }
+</style>
