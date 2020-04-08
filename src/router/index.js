@@ -192,6 +192,19 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/order-management',
+    component: Layout,
+    name: 'OrderManagement',
+    children: [
+      {
+        path: 'order',
+        name: 'Order',
+        component: () => import('@/views/order/index'),
+        meta: { title: '账单管理', icon: 'example' }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

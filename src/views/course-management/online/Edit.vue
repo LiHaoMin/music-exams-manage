@@ -137,7 +137,7 @@ export default {
         }
       })
       request({
-        url: '/urriculum/add_curriculum',
+        url: '/curriculum/add_curriculum',
         method: 'post',
         data: this.form
       }).then((res) => {
