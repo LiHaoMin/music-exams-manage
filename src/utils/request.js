@@ -96,9 +96,9 @@ service.interceptors.response.use(
         })
         break
       case 401:
-        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-          confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel',
+        MessageBox.confirm('登录信息已失效，点击确认重新登录。', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           store.dispatch('user/resetToken').then(() => {
