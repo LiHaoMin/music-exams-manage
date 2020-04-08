@@ -173,14 +173,16 @@ export default {
         })
         return
       }
-      // FIXME 批量修改推荐
+      let recommendData = []
       selectionData.forEach((el) => {
-        request({
-          url: '/curriculum/update_curriculum',
-          method: 'post',
-          data: { id: el.id, recommend: true }
-        }).then((res) => {
-        })
+        recommendData.push({ id: el.id, recommend: true })
+      })
+      request({
+        url: '/curriculum/update_curriculum_list',
+        method: 'post',
+        data: recommendData
+      }).then((res) => {
+        console.log('sc：设为推荐')
       })
     },
     handleEdit(idx, row) {
