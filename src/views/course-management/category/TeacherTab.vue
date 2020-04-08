@@ -194,24 +194,30 @@ export default {
       this.dialogFormVisible = true
     },
     handleDelete(idx, row, type2) {
-      request({
-        url: '/curriculum-classification/delete_classification',
-        method: 'get',
-        params: {
-          id: row.id
-        }
-      }).then((res) => {
-        switch (type2) {
-          case 1:
-            this.fetchData1()
-            break
-          case 2:
-            this.fetchData2()
-            break
-          case 3:
-            this.fetchData3()
-            break
-        }
+      this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        request({
+          url: '/curriculum-classification/delete_classification',
+          method: 'get',
+          params: {
+            id: row.id
+          }
+        }).then((res) => {
+          switch (type2) {
+            case 1:
+              this.fetchData1()
+              break
+            case 2:
+              this.fetchData2()
+              break
+            case 3:
+              this.fetchData3()
+              break
+          }
+        })
       })
     },
     fetchData1() {

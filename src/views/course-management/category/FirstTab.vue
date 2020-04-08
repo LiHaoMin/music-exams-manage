@@ -28,7 +28,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="pagination.total > 0" :total="pagination.total" :page.sync="pagination.num" :limit.sync="pagination.size" @pagination="fetchData" />
     <el-dialog title="添加分类" :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="rules" ref="form">
         <el-form-item label="分类名称" prop="name">
@@ -45,7 +44,6 @@
 
 <script>
 import request from '@/utils/request'
-import Pagination from '@/components/Pagination'
 
 export default {
   data() {
@@ -54,7 +52,7 @@ export default {
       listLoading: true,
       pagination: {
         num: 1,
-        size: 10,
+        size: 100000,
         total: 0
       },
       form: {},
@@ -68,9 +66,6 @@ export default {
   },
   created() {
     this.fetchData()
-  },
-  components: {
-    Pagination
   },
   methods: {
     save() {
@@ -110,14 +105,20 @@ export default {
       this.dialogFormVisible = true
     },
     handleDelete(idx, row) {
-      request({
-        url: '/curriculum-classification/delete_classification',
-        method: 'get',
-        params: {
-          id: row.id
-        }
-      }).then((res) => {
-        this.fetchData()
+      this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        request({
+          url: '/curriculum-classification/delete_classification',
+          method: 'get',
+          params: {
+            id: row.id
+          }
+        }).then((res) => {
+          this.fetchData()
+        })
       })
     },
     fetchData() {
@@ -128,7 +129,6 @@ export default {
         params: this.pagination
       }).then((res) => {
         this.list = res.data.records
-        this.pagination.total = res.data.total
         this.listLoading = false
       })
     }

@@ -41,13 +41,13 @@
             <el-option v-for="item in typeB" :key="item.value" :label="item.name" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item size="small">
+          <el-button type="success" @click="recommend">设为推荐</el-button>
+        </el-form-item>
       </div>
     </el-form>
-    <el-table v-loading="listLoading" :data="list" element-loading-text="加载中..." border fit highlight-current-row>
-      <el-table-column align="center" label="排序">
-        <template slot-scope="scope">
-          {{ scope.$index + 1 }}
-        </template>
+    <el-table ref="listTable" v-loading="listLoading" :data="list" element-loading-text="加载中..." border fit highlight-current-row>
+      <el-table-column type="selection" align="center" label="排序" show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column align="center" label="一级分类">
         <template slot-scope="scope">
@@ -92,6 +92,7 @@
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-link :underline="false" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-link>
+          <el-link :underline="false" type="info" @click="handleStatus(scope.$index, scope.row)">{{ !scope.row.upperShelf | states }}</el-link>
           <el-link :underline="false" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-link>
         </template>
       </el-table-column>
@@ -156,12 +157,66 @@ export default {
   },
   methods: {
     query() {
-      this.pagination = { num: 1 }
+      this.pagination = { num: 1, size: 10 }
       if (this.listQuery.time) {
         this.listQuery.startTime = this.listQuery.time[0]
         this.listQuery.endTime = this.listQuery.time[1]
       }
       this.fetchData()
+    },
+    recommend() {
+      const selectionData = this.$refs.listTable.selection
+      if (selectionData.length < 1) {
+        this.$message({
+          type: 'info',
+          message: '未选中行'
+        })
+        return
+      }
+      // FIXME 批量修改推荐
+      selectionData.forEach((el) => {
+        request({
+          url: '/curriculum/update_curriculum',
+          method: 'post',
+          data: { id: el.id, recommend: true }
+        }).then((res) => {
+        })
+      })
+    },
+    handleEdit(idx, row) {
+      // TODO 编辑
+    },
+    handleStatus(idx, row) {
+      request({
+        url: '/curriculum/update_curriculum',
+        method: 'post',
+        data: {
+          id: row.id,
+          upperShelf: !row.upperShelf
+        }
+      }).then((res) => {
+        this.pagination = { num: 1, size: 10 }
+        this.fetchData()
+      })
+    },
+    handleDelete(idx, row) {
+      this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        request({
+          url: '/curriculum/update_curriculum',
+          method: 'post',
+          data: {
+            id: row.id,
+            isDelete: true
+          }
+        }).then((res) => {
+          this.pagination = { num: 1, size: 10 }
+          this.fetchData()
+        })
+      })
     },
     fetchData() {
       this.listLoading = true
