@@ -47,7 +47,7 @@
       </div>
     </el-form>
     <el-table ref="listTable" v-loading="listLoading" :data="list" element-loading-text="加载中..." border fit highlight-current-row>
-      <el-table-column type="selection" align="center" label="排序" show-overflow-tooltip="true">
+      <el-table-column type="selection" align="center" label="排序">
       </el-table-column>
       <el-table-column align="center" label="一级分类">
         <template slot-scope="scope">
@@ -184,7 +184,7 @@ export default {
       })
     },
     handleEdit(idx, row) {
-      // TODO 编辑
+      this.$router.push({ name: 'onlineEdit', params: { id: row.id }})
     },
     handleStatus(idx, row) {
       request({

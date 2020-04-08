@@ -178,6 +178,13 @@ export const constantRoutes = [
         meta: { title: '线上课程', icon: 'table' }
       },
       {
+        path: 'edit',
+        name: 'onlineEdit',
+        hidden: true,
+        component: () => import('@/views/course-management/online/Edit'),
+        meta: { title: '编辑课程', icon: 'table' }
+      },
+      {
         path: 'table1',
         name: 'Table1',
         component: () => import('@/views/table/index'),
