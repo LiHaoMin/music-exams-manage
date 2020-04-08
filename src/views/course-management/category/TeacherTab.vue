@@ -87,8 +87,8 @@
       </el-col>
     </el-row>
     <el-dialog title="添加分类" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
-        <el-form-item label="分类名称">
+      <el-form :model="form" :rules="rules" ref="form">
+        <el-form-item label="分类名称" prop="name">
           <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
@@ -113,6 +113,11 @@ export default {
       list3: null,
       listLoading3: true,
       form: {},
+      rules: {
+        name: [
+          { required: true, message: '请输入名称', trigger: 'blur' }
+        ]
+      },
       dialogFormVisible: false,
       type2: 1
     }
@@ -124,49 +129,53 @@ export default {
   },
   methods: {
     save() {
-      if (this.form.id) {
-        request({
-          url: '/curriculum-classification/update_classification',
-          method: 'get',
-          params: this.form
-        }).then((res) => {
-          this.dialogFormVisible = false
-          switch (this.type2) {
-            case 1:
-                this.fetchData1()
-                break
-            case 2:
-              this.fetchData2()
-              break
-            case 3:
-              this.fetchData3()
-              break
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          if (this.form.id) {
+            request({
+              url: '/curriculum-classification/update_classification',
+              method: 'get',
+              params: this.form
+            }).then((res) => {
+              this.dialogFormVisible = false
+              switch (this.type2) {
+                case 1:
+                  this.fetchData1()
+                  break
+                case 2:
+                  this.fetchData2()
+                  break
+                case 3:
+                  this.fetchData3()
+                  break
+              }
+            })
+          } else {
+            request({
+              url: '/curriculum-classification/add_classroom_type',
+              method: 'get',
+              params: {
+                ClassroomType: 1,
+                ClassroomOsType: this.type2,
+                name: this.form.name
+              }
+            }).then((res) => {
+              this.dialogFormVisible = false
+              switch (this.type2) {
+                case 1:
+                  this.fetchData1()
+                  break
+                case 2:
+                  this.fetchData2()
+                  break
+                case 3:
+                  this.fetchData3()
+                  break
+              }
+            })
           }
-        })
-      } else {
-        request({
-          url: '/curriculum-classification/add_classroom_type',
-          method: 'get',
-          params: {
-            ClassroomType: 1,
-            ClassroomOsType: this.type2,
-            name: this.form.name
-          }
-        }).then((res) => {
-          this.dialogFormVisible = false
-          switch (this.type2) {
-            case 1:
-              this.fetchData1()
-              break
-            case 2:
-              this.fetchData2()
-              break
-            case 3:
-              this.fetchData3()
-              break
-          }
-        })
-      }
+        }
+      })
     },
     handleAdd(type2) {
       this.form = {}

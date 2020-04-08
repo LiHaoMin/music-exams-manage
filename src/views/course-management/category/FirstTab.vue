@@ -30,8 +30,8 @@
     </el-table>
     <pagination v-show="pagination.total > 0" :total="pagination.total" :page.sync="pagination.num" :limit.sync="pagination.size" @pagination="fetchData" />
     <el-dialog title="添加分类" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
-        <el-form-item label="分类名称">
+      <el-form :model="form" :rules="rules" ref="form">
+        <el-form-item label="分类名称" prop="name">
           <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
@@ -58,6 +58,11 @@ export default {
         total: 0
       },
       form: {},
+      rules: {
+        name: [
+          { required: true, message: '请输入名称', trigger: 'blur' }
+        ]
+      },
       dialogFormVisible: false
     }
   },
@@ -69,25 +74,29 @@ export default {
   },
   methods: {
     save() {
-      if (this.form.id) {
-        request({
-          url: '/curriculum-classification/update_classification',
-          method: 'get',
-          params: this.form
-        }).then((res) => {
-          this.dialogFormVisible = false
-          this.fetchData()
-        })
-      } else {
-        request({
-          url: '/curriculum-classification/add_first_classification',
-          method: 'get',
-          params: this.form
-        }).then((res) => {
-          this.dialogFormVisible = false
-          this.fetchData()
-        })
-      }
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          if (this.form.id) {
+            request({
+              url: '/curriculum-classification/update_classification',
+              method: 'get',
+              params: this.form
+            }).then((res) => {
+              this.dialogFormVisible = false
+              this.fetchData()
+            })
+          } else {
+            request({
+              url: '/curriculum-classification/add_first_classification',
+              method: 'get',
+              params: this.form
+            }).then((res) => {
+              this.dialogFormVisible = false
+              this.fetchData()
+            })
+          }
+        }
+      })
     },
     handleAdd() {
       this.form = {}
