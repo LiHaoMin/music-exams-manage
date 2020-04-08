@@ -144,7 +144,7 @@ export default {
     category(data) {
       const typeB = ['', '导师讲堂', '学长讲堂', '学员讲堂']
       const typeC = ['', '音乐', '舞蹈', '留学']
-      return typeB[data.typeB] + '-' + typeC[data.typeC] + '-' + data.classificationtringName
+      return typeB[data.typeB] + '-' + typeC[data.typeC] + '-' + data.typeName
     },
     states(data) {
       return data ? '上架' : '下架'
@@ -193,6 +193,7 @@ export default {
     },
     add() {
       // TODO add
+      this.$router.push({ name: 'onlineEdit'})
     },
     handleEdit(idx, row) {
       this.$router.push({ name: 'onlineEdit', params: { id: row.id }})
