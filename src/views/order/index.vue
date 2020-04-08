@@ -49,60 +49,60 @@
         </el-form-item>
       </div>
     </el-form>
-    <el-table ref="listTable" v-loading="listLoading" :data="list" element-loading-text="加载中..." border fit highlight-current-row>
-      <el-table-column type="selection" align="center" label="排序">
-      </el-table-column>
-      <el-table-column align="center" label="订单编号">
-        <template slot-scope="scope">
-          {{ scope.row.asorderNumber }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="付款时间">
-        <template slot-scope="scope">
-          {{ scope.row | date }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="购买课程">
-        <template slot-scope="scope">
-          {{ scope.row.curriculumName }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="购买昵称">
-        <template slot-scope="scope">
-          {{ scope.row.userName }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="已付费">
-        <template slot-scope="scope">
-          {{ scope.row.money }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="讲师分成">
-        <template slot-scope="scope">
-          {{ scope.row | divideInto }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="上传人">
-        <template slot-scope="scope">
-          {{ scope.row.ownerName }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="提现时间">
-        <template slot-scope="scope">
-          {{ scope.row.cashWithdrawalApplyTime | date}}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="操作">
-        <template slot-scope="scope">
-          <el-link :underline="false" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-link>
-          <el-link :underline="false" type="info" @click="handleStatus(scope.$index, scope.row)">{{ !scope.row.upperShelf | states }}</el-link>
-          <el-link :underline="false" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-link>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-row type="flex" justify="end">
-      <pagination v-show="pagination.total > 0" :total="pagination.total" :page.sync="pagination.num" :limit.sync="pagination.size" @pagination="fetchData" />
-    </el-row>
+    <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+      <el-tab-pane label="线上课程" name="online">
+        <el-table ref="listTable" v-loading="listLoading" :data="list" element-loading-text="加载中..." border fit highlight-current-row>
+          <el-table-column type="selection" align="center" label="排序">
+          </el-table-column>
+          <el-table-column align="center" label="订单编号">
+            <template slot-scope="scope">
+              {{ scope.row.asorderNumber }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="付款时间">
+            <template slot-scope="scope">
+              {{ scope.row | date }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="购买课程">
+            <template slot-scope="scope">
+              {{ scope.row.curriculumName }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="购买昵称">
+            <template slot-scope="scope">
+              {{ scope.row.userName }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="已付费">
+            <template slot-scope="scope">
+              {{ scope.row.money }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="讲师分成">
+            <template slot-scope="scope">
+              {{ scope.row | divideInto }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="上传人">
+            <template slot-scope="scope">
+              {{ scope.row.ownerName }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="提现时间">
+            <template slot-scope="scope">
+              {{ scope.row.cashWithdrawalApplyTime | date}}
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-row type="flex" justify="end">
+          <pagination v-show="pagination.total > 0" :total="pagination.total" :page.sync="pagination.num" :limit.sync="pagination.size" @pagination="fetchData" />
+        </el-row>
+      </el-tab-pane>
+      <el-tab-pane label="线下实体课" name="offline">
+        线下实体课
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
@@ -114,6 +114,7 @@ import moment from 'moment'
 export default {
   data() {
     return {
+      activeName: 'online',
       listLoading: true,
       list: [],
       pagination: {
