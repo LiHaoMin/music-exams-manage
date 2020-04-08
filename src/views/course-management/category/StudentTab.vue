@@ -120,7 +120,7 @@ export default {
       },
       dialogFormVisible: false,
       // type1:1导师 2学长 3学员
-      type1: 1,
+      type1: 3,
       // type2:1音乐 2舞蹈 3留学
       type2: 1
     }

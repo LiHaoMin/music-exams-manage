@@ -7,8 +7,12 @@
       <el-tab-pane label="导师讲堂分类设置" name="teacher">
         <TeacherTab />
       </el-tab-pane>
-      <el-tab-pane label="学长讲堂分类设置" name="third">学长讲堂分类设置</el-tab-pane>
-      <el-tab-pane label="学员讲堂分类设置" name="fourth">学员讲堂分类设置</el-tab-pane>
+      <el-tab-pane label="学长讲堂分类设置" name="senior">
+        <SeniorTab />
+      </el-tab-pane>
+      <el-tab-pane label="学员讲堂分类设置" name="student">
+        <StudentTab />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -16,6 +20,8 @@
 <script>
 import FirstTab from '@/views/course-management/category/FirstTab'
 import TeacherTab from '@/views/course-management/category/TeacherTab'
+import SeniorTab from '@/views/course-management/category/SeniorTab'
+import StudentTab from '@/views/course-management/category/StudentTab'
 
 export default {
   data() {
@@ -25,7 +31,9 @@ export default {
   },
   components: {
     FirstTab,
-    TeacherTab
+    TeacherTab,
+    SeniorTab,
+    StudentTab
   },
   methods: {
     handleClick(tab, event) {
