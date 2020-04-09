@@ -163,8 +163,13 @@ export default {
   },
   methods: {
     dateChange(time) {
-      this.listQuery.startTime = time[0]
-      this.listQuery.endTime = time[1]
+      if (time) {
+        this.listQuery.startTime = time[0]
+        this.listQuery.endTime = time[1]
+      } else {
+        this.listQuery.startTime = null
+        this.listQuery.endTime = null
+      }
     },
     query() {
       this.pagination = { num: 1, size: 10 }
