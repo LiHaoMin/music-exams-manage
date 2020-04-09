@@ -1,96 +1,102 @@
 <template>
   <div class="app-container">
-    <el-form :inline="true" class="demo-form-inline">
-      <div>
-        <el-form-item label="上架状态" size="small" >
-          <el-select v-model="listQuery.upperShelf" clearable  placeholder="请选择">
-            <el-option label="上架" value="true"></el-option>
-            <el-option label="下架" value="false"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="上传时间" size="small">
-          <el-date-picker
-            v-model="listQuery.time"
-            type="daterange"
-            value-format="timestamp"
-            range-separator="至"
-            @change="dateChange"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item size="small">
-          <el-input v-model="listQuery.curriculumName" placeholder="请输入课程名称"></el-input>
-        </el-form-item>
-        <el-form-item size="small">
-          <el-button type="primary" @click="query">查询</el-button>
-        </el-form-item>
+    <el-card>
+      <div slot="header">
+        <el-form :inline="true" class="demo-form-inline">
+          <div>
+            <el-form-item label="上架状态" size="small" >
+              <el-select v-model="listQuery.upperShelf" clearable  placeholder="请选择">
+                <el-option label="上架" value="true"></el-option>
+                <el-option label="下架" value="false"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="上传时间" size="small">
+              <el-date-picker
+                v-model="listQuery.time"
+                type="daterange"
+                value-format="timestamp"
+                range-separator="至"
+                @change="dateChange"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item size="small">
+              <el-input v-model="listQuery.curriculumName" placeholder="请输入课程名称"></el-input>
+            </el-form-item>
+            <el-form-item size="small">
+              <el-button type="primary" @click="query">查询</el-button>
+            </el-form-item>
+          </div>
+          <div>
+            <el-form-item size="small" label="分类">
+              <el-select v-model="listQuery.typeC" clearable  placeholder="请选择">
+                <el-option label="音乐考研" value="1"></el-option>
+                <el-option label="舞蹈考研" value="2"></el-option>
+                <el-option label="音乐留学" value="2"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item size="small">
+              <el-button type="success" @click="add">添加实体课</el-button>
+            </el-form-item>
+          </div>
+        </el-form>
       </div>
-      <div>
-        <el-form-item size="small" label="分类">
-          <el-select v-model="listQuery.typeC" clearable  placeholder="请选择">
-            <el-option label="音乐考研" value="1"></el-option>
-            <el-option label="舞蹈考研" value="2"></el-option>
-            <el-option label="音乐留学" value="2"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item size="small">
-          <el-button type="success" @click="add">添加实体课</el-button>
-        </el-form-item>
+      <div class="content">
+        <el-table ref="listTable" v-loading="listLoading" :data="list" element-loading-text="加载中..." border fit highlight-current-row>
+          <el-table-column align="center" label="分类">
+            <template slot-scope="scope">
+              {{ scope.row.typeC | category }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="实体课">
+            <template slot-scope="scope">
+              {{ scope.row.curriculumName }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="封面">
+            <template slot-scope="scope">
+              // TODO 封面
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="描述">
+            <template slot-scope="scope">
+              // TODO 描述
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="添加时间">
+            <template slot-scope="scope">
+              {{ scope.row.gmtCreate | date}}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="价格">
+            <template slot-scope="scope">
+              {{ scope.row.money }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="销量">
+            <template slot-scope="scope">
+              {{ scope.row.salesVolume }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="状态">
+            <template slot-scope="scope">
+              {{ scope.row.upperShelf | states }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="操作">
+            <template slot-scope="scope">
+              <el-link :underline="false" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-link>
+              <el-link :underline="false" type="info" @click="handleStatus(scope.$index, scope.row)">{{ !scope.row.upperShelf | states }}</el-link>
+              <el-link :underline="false" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-link>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-row type="flex" justify="end">
+          <pagination v-show="pagination.total > 0" :total="pagination.total" :page.sync="pagination.num" :limit.sync="pagination.size" @pagination="fetchData" />
+        </el-row>
       </div>
-    </el-form>
-    <el-table ref="listTable" v-loading="listLoading" :data="list" element-loading-text="加载中..." border fit highlight-current-row>
-      <el-table-column align="center" label="分类">
-        <template slot-scope="scope">
-          {{ scope.row.typeC | category }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="实体课">
-        <template slot-scope="scope">
-          {{ scope.row.curriculumName }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="封面">
-        <template slot-scope="scope">
-          // TODO 封面
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="描述">
-        <template slot-scope="scope">
-          // TODO 描述
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="添加时间">
-        <template slot-scope="scope">
-          {{ scope.row.gmtCreate | date}}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="价格">
-        <template slot-scope="scope">
-          {{ scope.row.money }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="销量">
-        <template slot-scope="scope">
-          {{ scope.row.salesVolume }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="状态">
-        <template slot-scope="scope">
-          {{ scope.row.upperShelf | states }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="操作">
-        <template slot-scope="scope">
-          <el-link :underline="false" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-link>
-          <el-link :underline="false" type="info" @click="handleStatus(scope.$index, scope.row)">{{ !scope.row.upperShelf | states }}</el-link>
-          <el-link :underline="false" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-link>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-row type="flex" justify="end">
-      <pagination v-show="pagination.total > 0" :total="pagination.total" :page.sync="pagination.num" :limit.sync="pagination.size" @pagination="fetchData" />
-    </el-row>
+    </el-card>
   </div>
 </template>
 

@@ -1,109 +1,115 @@
 <template>
   <div class="app-container">
-    <el-form :inline="true" class="demo-form-inline">
-      <div>
-        <el-form-item label="上架状态" size="small" >
-          <el-select v-model="listQuery.upperShelf" clearable  placeholder="请选择">
-            <el-option label="上架" value="true"></el-option>
-            <el-option label="下架" value="false"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="上传时间" size="small">
-          <el-date-picker
-            v-model="listQuery.time"
-            type="daterange"
-            @change="dateChange"
-            value-format="timestamp"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item size="small">
-          <el-input v-model="listQuery.curriculumName" placeholder="请输入课程名称"></el-input>
-        </el-form-item>
-        <el-form-item size="small">
-          <el-button type="primary" @click="query">查询</el-button>
-        </el-form-item>
+    <el-card>
+      <div slot="header">
+        <el-form :inline="true" class="demo-form-inline">
+          <div>
+            <el-form-item label="上架状态" size="small" >
+              <el-select v-model="listQuery.upperShelf" clearable  placeholder="请选择">
+                <el-option label="上架" value="true"></el-option>
+                <el-option label="下架" value="false"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="上传时间" size="small">
+              <el-date-picker
+                v-model="listQuery.time"
+                type="daterange"
+                @change="dateChange"
+                value-format="timestamp"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item size="small">
+              <el-input v-model="listQuery.curriculumName" placeholder="请输入课程名称"></el-input>
+            </el-form-item>
+            <el-form-item size="small">
+              <el-button type="primary" @click="query">查询</el-button>
+            </el-form-item>
+          </div>
+          <div>
+            <el-form-item size="small" label="上传人">
+              <el-select v-model="listQuery.userId" clearable  placeholder="请选择">
+                <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item size="small" label="一级分类">
+              <el-select v-model="listQuery.typeA" clearable  placeholder="请选择">
+                <el-option v-for="item in firstList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item size="small" label="讲堂分类">
+              <el-select v-model="listQuery.typeB" clearable  placeholder="请选择">
+                <el-option v-for="item in typeB" :key="item.value" :label="item.name" :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item size="small">
+              <el-button type="success" @click="recommend">设为推荐</el-button>
+            </el-form-item>
+            <el-form-item size="small">
+              <el-button type="success" @click="add">添加课程</el-button>
+            </el-form-item>
+          </div>
+        </el-form>
       </div>
-      <div>
-        <el-form-item size="small" label="上传人">
-          <el-select v-model="listQuery.userId" clearable  placeholder="请选择">
-            <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item size="small" label="一级分类">
-          <el-select v-model="listQuery.typeA" clearable  placeholder="请选择">
-            <el-option v-for="item in firstList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item size="small" label="讲堂分类">
-          <el-select v-model="listQuery.typeB" clearable  placeholder="请选择">
-            <el-option v-for="item in typeB" :key="item.value" :label="item.name" :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item size="small">
-          <el-button type="success" @click="recommend">设为推荐</el-button>
-        </el-form-item>
-        <el-form-item size="small">
-          <el-button type="success" @click="add">添加课程</el-button>
-        </el-form-item>
+      <div class="content">
+        <el-table ref="listTable" v-loading="listLoading" :data="list" element-loading-text="加载中..." border fit highlight-current-row>
+          <el-table-column type="selection" align="center" label="排序">
+          </el-table-column>
+          <el-table-column align="center" label="一级分类">
+            <template slot-scope="scope">
+              {{ scope.row.classificationtringName }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="讲堂分类">
+            <template slot-scope="scope">
+              {{ scope.row | category }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="名称">
+            <template slot-scope="scope">
+              {{ scope.row.curriculumName }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="上架状态">
+            <template slot-scope="scope">
+              {{ scope.row.upperShelf | states }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="价格">
+            <template slot-scope="scope">
+              {{ scope.row.money }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="销量">
+            <template slot-scope="scope">
+              {{ scope.row.salesVolume }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="上传人">
+            <template slot-scope="scope">
+              {{ scope.row.userName }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="上传时间">
+            <template slot-scope="scope">
+              {{ scope.row.gmtCreate | date}}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="操作">
+            <template slot-scope="scope">
+              <el-link :underline="false" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-link>
+              <el-link :underline="false" type="info" @click="handleStatus(scope.$index, scope.row)">{{ !scope.row.upperShelf | states }}</el-link>
+              <el-link :underline="false" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-link>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-row type="flex" justify="end">
+          <pagination v-show="pagination.total > 0" :total="pagination.total" :page.sync="pagination.num" :limit.sync="pagination.size" @pagination="fetchData" />
+        </el-row>
       </div>
-    </el-form>
-    <el-table ref="listTable" v-loading="listLoading" :data="list" element-loading-text="加载中..." border fit highlight-current-row>
-      <el-table-column type="selection" align="center" label="排序">
-      </el-table-column>
-      <el-table-column align="center" label="一级分类">
-        <template slot-scope="scope">
-          {{ scope.row.classificationtringName }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="讲堂分类">
-        <template slot-scope="scope">
-          {{ scope.row | category }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="名称">
-        <template slot-scope="scope">
-          {{ scope.row.curriculumName }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="上架状态">
-        <template slot-scope="scope">
-          {{ scope.row.upperShelf | states }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="价格">
-        <template slot-scope="scope">
-          {{ scope.row.money }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="销量">
-        <template slot-scope="scope">
-          {{ scope.row.salesVolume }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="上传人">
-        <template slot-scope="scope">
-          {{ scope.row.userName }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="上传时间">
-        <template slot-scope="scope">
-          {{ scope.row.gmtCreate | date}}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="操作">
-        <template slot-scope="scope">
-          <el-link :underline="false" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-link>
-          <el-link :underline="false" type="info" @click="handleStatus(scope.$index, scope.row)">{{ !scope.row.upperShelf | states }}</el-link>
-          <el-link :underline="false" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-link>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-row type="flex" justify="end">
-      <pagination v-show="pagination.total > 0" :total="pagination.total" :page.sync="pagination.num" :limit.sync="pagination.size" @pagination="fetchData" />
-    </el-row>
+    </el-card>
   </div>
 </template>
 
