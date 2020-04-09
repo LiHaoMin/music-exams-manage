@@ -38,7 +38,7 @@ module.exports = {
     },
     proxy: {
       "/musicweb": {
-        target: "http://122.51.51.37:9102/musicweb"
+        target: "http://47.114.153.190:8281"
       }
     }
     // before: require('./mock/mock-server.js')

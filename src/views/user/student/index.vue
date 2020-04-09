@@ -53,6 +53,7 @@
       <el-table-column align="center" label="账户禁用">
         <template slot-scope="scope">
           <el-switch
+            @change="userSwitch($event, scope.row)"
             v-model="scope.row.userEnable"
             active-color="#ff4949"
             inactive-color="#13ce66">
@@ -68,6 +69,45 @@
     <el-row type="flex" justify="end">
       <pagination v-show="pagination.total > 0" :total="pagination.total" :page.sync="pagination.num" :limit.sync="pagination.size" @pagination="fetchData" />
     </el-row>
+    <el-dialog title="添加分类" :visible.sync="dialogFormVisible">
+      <el-row>
+        <el-col :span="8">用户ID：{{currentRow.userId}}</el-col>
+        <el-col :span="8">用户昵称：{{currentRow.name}}</el-col>
+        <el-col :span="8">手机号：{{currentRow.telephone}}</el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="8">订单数量：{{currentRow.num}}</el-col>
+        <el-col :span="8">付费总额：{{currentRow.money}}</el-col>
+        <el-col :span="8">上次付费时间：// TODO 上次付费时间</el-col>
+      </el-row>
+      <el-table v-loading="detailListLoading" :data="detailList" element-loading-text="加载中..." stripe>
+        <el-table-column align="center" label="课程分类">
+          <template slot-scope="scope">
+            {{ scope.row.classificationName }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="名称">
+          <template slot-scope="scope">
+            {{ scope.row.curriculumName }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="价格">
+          <template slot-scope="scope">
+            {{ scope.row.money }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="上传人">
+          <template slot-scope="scope">
+            {{ scope.row.name }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="付费时间">
+          <template slot-scope="scope">
+            {{ scope.row.gmtCreate }}
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -79,14 +119,18 @@ import moment from 'moment'
 export default {
   data() {
     return {
+      dialogFormVisible: false,
       listQuery: {},
       listLoading: true,
       list: [],
+      detailListLoading: true,
+      detailList: [],
       pagination: {
         num: 1,
         size: 10,
         total: 0
-      }
+      },
+      currentRow: {}
     }
   },
   components: {
@@ -109,6 +153,21 @@ export default {
       this.pagination = { num: 1, size: 10 }
       this.fetchData()
     },
+    handlePV(idx, row) {
+      this.currentRow = row
+      this.detailList = []
+      this.fetchDataDetail(row.userId)
+      this.dialogFormVisible = true
+    },
+    userSwitch(ev, row) {
+      request({
+        url: '/user/update_user_content',
+        method: 'post',
+        data: {userEnable: ev, id: row.userId}
+      }).then((res) => {
+        this.fetchData()
+      })
+    },
     fetchData() {
       this.listLoading = true
       const queryData = {
@@ -123,6 +182,17 @@ export default {
         this.list = res.data.records
         this.pagination.total = res.data.total
         this.listLoading = false
+      })
+    },
+    fetchDataDetail(id) {
+      this.detailListLoading = true
+      request({
+        url: '/order/user_order_list',
+        method: 'get',
+        params: { userId: id }
+      }).then((res) => {
+        this.detailList = res.data
+        this.detailListLoading = false
       })
     }
   }
