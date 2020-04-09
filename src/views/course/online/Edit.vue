@@ -46,22 +46,22 @@
           <el-input v-model="form.teacherIntroduce" type="textarea" :rows="5" placeholder="请输入内容" maxlength="100" show-word-limit></el-input>
         </el-form-item>
         <el-form-item label="一级分类">
-          <el-select v-model="form.typeA" placeholder="请选择">
+          <el-select ref="typeA" v-model="form.typeA" placeholder="请选择">
             <el-option v-for="item in firstList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="讲堂分类">
-          <el-select @change="typeChange" v-model="form.typeB" placeholder="请选择">
+          <el-select ref="typeB" @change="typeChange" v-model="form.typeB" placeholder="请选择">
             <el-option label="导师讲堂" value="1"></el-option>
             <el-option label="学长讲堂" value="2"></el-option>
             <el-option label="学员讲堂" value="3"></el-option>
           </el-select>
-          <el-select @change="typeChange"  v-model="form.typeC" placeholder="请选择">
+          <el-select ref="typeC" @change="typeChange"  v-model="form.typeC" placeholder="请选择">
             <el-option label="音乐" value="1"></el-option>
             <el-option label="舞蹈" value="2"></el-option>
             <el-option label="留学" value="3"></el-option>
           </el-select>
-          <el-select v-model="form.typeD" placeholder="请选择">
+          <el-select ref="typeD" v-model="form.typeD" placeholder="请选择">
             <el-option v-for="item in firstList2" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -72,18 +72,50 @@
             inactive-text="系统数据">
           </el-switch>
         </el-form-item>
-        <el-form-item label="已学习人数" v-show="isLearnNum">
+        <el-form-item label="已学习人数" v-if="isLearnNum">
           <el-col :span="6"><el-input v-model="form.numOfLearners" placeholder="请输入数量"></el-input></el-col>
           <el-col :span="5">&nbsp;&nbsp;&nbsp;人</el-col>
         </el-form-item>
       </el-col>
-       <span>&nbsp;</span>
+      <span>&nbsp;</span>
       <el-divider></el-divider>
-      <el-button type="primary" @click="onSubmit">新增</el-button>
+      <el-row v-if="videoList.length > 0">
+        <div :key="index" v-for="(item,index) in videoList">
+          <p>第1节</p>
+          <el-col :span="6">课时名称：{{item.videoName}}</el-col>
+          <el-col :span="6">时长：</el-col>
+          <el-col :span="6">一级分类：{{item.firstCate}}</el-col>
+          <el-col :span="6">讲堂分类：{{item.typeCate}}</el-col>
+        </div>
+      </el-row>
+      <el-row>
+        <el-col></el-col>
+        <el-col><el-button type="primary" @click="addVideo">新增</el-button></el-col>
+      </el-row>
       <el-row type="flex" justify="end">
         <el-button type="success" @click="add">确认添加</el-button>
         <el-button @click="cancel">取消</el-button>
       </el-row>
+      <el-dialog :title="'第' + (videoList.length + 1) + '节'" :visible.sync="dialogFormVisible">
+        <el-form :model="videoForm">
+          <el-form-item label="课时名称" prop="name">
+            <el-input v-model="videoForm.videoName" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="课时名称" prop="name">
+            <el-upload
+              class="upload-demo"
+              action="https://jsonplaceholder.typicode.com/posts/"
+              :limit="1">
+              <el-button size="small" type="primary">点击上传</el-button>
+              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveVideo">立即添加</el-button>
+        </div>
+      </el-dialog>
     </el-form>
   </div>
 </template>
@@ -119,7 +151,10 @@ export default {
         teacherName: [
           { required: true, message: '请输入内容', trigger: 'blur' }
         ]
-      }
+      },
+      videoList: [],
+      videoForm: {},
+      dialogFormVisible: false
     }
   },
   created() {
@@ -136,6 +171,7 @@ export default {
           alert(JSON.stringify(this.form))
         }
       })
+      this.form.videoList = this.videoList
       request({
         url: '/curriculum/add_curriculum',
         method: 'post',
@@ -143,7 +179,22 @@ export default {
       }).then((res) => {
       })
     },
-    cancel() {},
+    cancel() {
+      this.$router.back()
+    },
+    addVideo() {
+      this.videoForm = {}
+      this.dialogFormVisible = true
+    },
+    saveVideo() {
+      this.videoForm.firstCate = this.$refs.typeA.$data.selected.label
+      let typeB = this.$refs.typeB.$data.selected.label ? this.$refs.typeB.$data.selected.label : ''
+      let typeC = this.$refs.typeC.$data.selected.label ? this.$refs.typeC.$data.selected.label : ''
+      let typeD = this.$refs.typeD.$data.selected.label ? this.$refs.typeD.$data.selected.label : ''
+      this.videoForm.typeCate = typeB + '-' + typeC + '-' + typeD
+      this.videoList.push(this.videoForm)
+      this.dialogFormVisible = false
+    },
     getFirstList() {
       request({
         url: '/curriculum-classification/first_class_classification',

@@ -160,7 +160,7 @@ export const constantRoutes = [
   },
 
   {
-    path: '/course-management',
+    path: '/course',
     component: Layout,
     name: 'CourseManagement',
     meta: { title: '课程管理', icon: 'example' },
@@ -168,32 +168,32 @@ export const constantRoutes = [
       {
         path: 'category',
         name: 'Category',
-        component: () => import('@/views/course-management/category/index'),
+        component: () => import('@/views/course/category/index'),
         meta: { title: '课程分类', icon: 'table' }
       },
       {
         path: 'online',
         name: 'online',
-        component: () => import('@/views/course-management/online/index'),
+        component: () => import('@/views/course/online/index'),
         meta: { title: '线上课程', icon: 'table' }
       },
       {
         path: 'edit',
         name: 'onlineEdit',
         hidden: true,
-        component: () => import('@/views/course-management/online/Edit'),
+        component: () => import('@/views/course/online/Edit'),
         meta: { title: '编辑课程', icon: 'table' }
       },
       {
         path: 'offline',
         name: 'offline',
-        component: () => import('@/views/course-management/offline/index'),
+        component: () => import('@/views/course/offline/index'),
         meta: { title: '线下课程', icon: 'table' }
       }
     ]
   },
   {
-    path: '/order-management',
+    path: '/order',
     component: Layout,
     name: 'OrderManagement',
     children: [
@@ -202,6 +202,20 @@ export const constantRoutes = [
         name: 'Order',
         component: () => import('@/views/order/index'),
         meta: { title: '账单管理', icon: 'example' }
+      }
+    ]
+  },
+  {
+    path: '/user',
+    component: Layout,
+    name: 'UserManagement',
+    meta: { title: '用户管理', icon: 'example' },
+    children: [
+      {
+        path: 'student',
+        name: 'Student',
+        component: () => import('@/views/user/student/index'),
+        meta: { title: '学员', icon: 'example' }
       }
     ]
   },

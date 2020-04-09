@@ -4,8 +4,8 @@
       <div>
         <el-form-item label="提现状态" size="small" >
           <el-select v-model="listQuery.upperShelf" clearable  placeholder="请选择">
-            <el-option label="上架" value="true"></el-option>
-            <el-option label="下架" value="false"></el-option>
+            <el-option label="已提现" value="true"></el-option>
+            <el-option label="未提现" value="false"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="订单时间" size="small">

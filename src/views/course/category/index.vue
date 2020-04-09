@@ -18,10 +18,10 @@
 </template>
 
 <script>
-import FirstTab from '@/views/course-management/category/FirstTab'
-import TeacherTab from '@/views/course-management/category/TeacherTab'
-import SeniorTab from '@/views/course-management/category/SeniorTab'
-import StudentTab from '@/views/course-management/category/StudentTab'
+import FirstTab from '@/views/course/category/FirstTab'
+import TeacherTab from '@/views/course/category/TeacherTab'
+import SeniorTab from '@/views/course/category/SeniorTab'
+import StudentTab from '@/views/course/category/StudentTab'
 
 export default {
   data() {
