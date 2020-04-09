@@ -103,7 +103,7 @@
         </el-table-column>
         <el-table-column align="center" label="付费时间">
           <template slot-scope="scope">
-            {{ scope.row.gmtCreate }}
+            {{ scope.row.gmtCreate | date }}
           </template>
         </el-table-column>
       </el-table>
@@ -131,6 +131,11 @@ export default {
         total: 0
       },
       currentRow: {}
+    }
+  },
+  filters: {
+    date(data) {
+      return moment(data).format('YYYY-MM-DD HH:mm:ss')
     }
   },
   components: {
