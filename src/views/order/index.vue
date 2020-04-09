@@ -3,16 +3,16 @@
     <el-form :inline="true" class="demo-form-inline">
       <div>
         <el-form-item label="提现状态" size="small" >
-          <el-select v-model="listQuery.upperShelf" clearable  placeholder="请选择">
+          <el-select v-model="listQuery.cashWithdrawal" clearable  placeholder="请选择">
             <el-option label="已提现" value="true"></el-option>
             <el-option label="未提现" value="false"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="订单时间" size="small">
           <el-date-picker
-            v-model="listQuery.time"
+            v-model="listQuery.time1"
             type="daterange"
-            @change="dateChange"
+            @change="dateChange1"
             value-format="timestamp"
             range-separator="至"
             start-placeholder="开始日期"
@@ -20,7 +20,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item size="small">
-          <el-input v-model="listQuery.curriculumName" placeholder="请输入课程名称"></el-input>
+          <el-input v-model="listQuery.curriculumName" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item size="small">
           <el-button type="primary" @click="query">查询</el-button>
@@ -33,11 +33,11 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="订单时间" size="small">
+        <el-form-item label="提现时间" size="small">
           <el-date-picker
-            v-model="listQuery.time"
+            v-model="listQuery.time2"
             type="daterange"
-            @change="dateChange"
+            @change="dateChange2"
             value-format="timestamp"
             range-separator="至"
             start-placeholder="开始日期"
@@ -52,7 +52,11 @@
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
       <el-tab-pane label="线上课程" name="online">
         <el-table ref="listTable" v-loading="listLoading" :data="list" element-loading-text="加载中..." border fit highlight-current-row>
-          <el-table-column type="selection" align="center" label="排序">
+          <el-table-column align="center" label="排序">
+            <template slot-scope="scope">
+              <span v-if="scope.row.wxWithdrawal">已提现</span>
+              <el-checkbox v-model="scope.row.wxWithdrawal" v-else></el-checkbox>
+            </template>
           </el-table-column>
           <el-table-column align="center" label="订单编号">
             <template slot-scope="scope">
@@ -122,7 +126,10 @@ export default {
         size: 10,
         total: 0
       },
-      listQuery: {}
+      listQuery: {
+        onLine: true
+      },
+      userList: []
     }
   },
   components: {
@@ -148,8 +155,42 @@ export default {
   },
   created() {
     this.fetchData()
+    this.getUserList()
   },
   methods: {
+    dateChange1(time) {
+      if (time) {
+        this.listQuery.startTime = time[0]
+        this.listQuery.endTime = time[1]
+      } else {
+        this.listQuery.startTime = null
+        this.listQuery.endTime = null
+      }
+    },
+    dateChange2(time) {
+      if (time) {
+        this.listQuery.cashWithdrawalStartTime = time[0]
+        this.listQuery.cashWithdrawalEndTime = time[1]
+      } else {
+        this.listQuery.cashWithdrawalStartTime = null
+        this.listQuery.cashWithdrawalEndTime = null
+      }
+    },
+    query() {
+      this.pagination = { num: 1, size: 10 }
+      this.fetchData()
+    },
+    handleClick(tab, event) {
+      if (this.activeName === 'online') {
+        this.listQuery.onLine = true
+        this.fetchData()
+      }
+      if (this.activeName === 'offline') {
+        this.listQuery.onLine = false
+        this.fetchData()
+      }
+    },
+    add() {},
     fetchData() {
       this.listLoading = true
       const queryData = {
@@ -162,10 +203,19 @@ export default {
         data: queryData
       }).then((res) => {
         this.list = res.data.records
+        alert(res.data.total)
         this.pagination.total = res.data.total
         this.listLoading = false
       })
     },
+    getUserList() {
+      request({
+        url: '/user/upload_user_list',
+        method: 'get'
+      }).then((res) => {
+        this.userList = res.data
+      })
+    }
   }
 }
 </script>
