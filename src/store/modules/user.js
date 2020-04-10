@@ -99,6 +99,8 @@ const actions = {
       removeToken() // must remove  token  first
       resetRouter()
       commit('RESET_STATE')
+      // this.dispatch('permission/SET_ROUTES', [])
+      commit('permission/SET_ROUTES', [], {root: true})
       resolve()
       // logout(state.token).then(() => {
       //   removeToken() // must remove  token  first

@@ -26,7 +26,7 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      const hasRoles = store.getters.permission_routes && store.getters.permission_routes.length > 0
+      const hasRoles = store.getters.permission_addRoutes && store.getters.permission_addRoutes.length > 0
       if (hasRoles) {
         next()
       } else {
@@ -35,7 +35,7 @@ router.beforeEach(async(to, from, next) => {
           // await store.dispatch('user/getInfo')
           const roles = store.getters.roles
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
-          router.options.routes = router.options.routes.concat(accessRoutes)
+          // router.options.routes = router.options.routes.concat(accessRoutes)
           router.addRoutes(accessRoutes)
 
           // hack method to ensure that addRoutes is complete
