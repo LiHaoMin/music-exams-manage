@@ -1,14 +1,24 @@
-import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { login } from '@/api/user'
+import {
+  getToken,
+  setToken,
+  removeToken,
+  setName,
+  getName,
+  getAvatar,
+  getUserType,
+  getRoles,
+  setUserType, setAvatar, setRoles
+} from '@/utils/auth'
 import { resetRouter } from '@/router'
-import request from '@/utils/request'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
-    name: '',
-    avatar: '',
-    userType: 0
+    name: getName(),
+    avatar: getAvatar(),
+    userType: getUserType(),
+    roles: getRoles() ? JSON.parse(getRoles()) : []
   }
 }
 
@@ -29,6 +39,9 @@ const mutations = {
   },
   SET_USER_TYPE: (state, userType) => {
     state.userType = userType
+  },
+  SET_ROLES: (state, roles) => {
+    state.roles = roles
   }
 }
 
@@ -41,7 +54,14 @@ const actions = {
         const { data } = response
         commit('SET_TOKEN', data.token)
         commit('SET_USER_TYPE', data.userType)
+        commit('SET_NAME', data.userName)
+        commit('SET_AVATAR', data.headImg)
+        commit('SET_ROLES', JSON.parse(data.adminType))
         setToken(data.token)
+        setName(data.userName)
+        setUserType(data.userType)
+        setAvatar(data.headImg)
+        setRoles(data.adminType)
         resolve()
       }).catch(error => {
         reject(error)
@@ -52,7 +72,7 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      // TODO 获取用户信息 http://122.51.51.37:9102/musicweb/doc.html#/default/user-controller/UpdateUserContentUsingPOST
+      // FIXME 获取用户信息
       // getInfo(state.token).then(response => {
       //   const { data } = response
       //
@@ -75,14 +95,19 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        removeToken() // must remove  token  first
-        resetRouter()
-        commit('RESET_STATE')
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      // FIXME 退出
+      removeToken() // must remove  token  first
+      resetRouter()
+      commit('RESET_STATE')
+      resolve()
+      // logout(state.token).then(() => {
+      //   removeToken() // must remove  token  first
+      //   resetRouter()
+      //   commit('RESET_STATE')
+      //   resolve()
+      // }).catch(error => {
+      //   reject(error)
+      // })
     })
   },
 

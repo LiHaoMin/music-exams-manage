@@ -203,7 +203,6 @@ export default {
         data: queryData
       }).then((res) => {
         this.list = res.data.records
-        alert(res.data.total)
         this.pagination.total = res.data.total
         this.listLoading = false
       })

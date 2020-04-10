@@ -157,13 +157,19 @@ export const constantRoutes = [
         meta: { title: 'External Link', icon: 'link' }
       }
     ]
-  },
+  }
+]
 
+export const asyncRoutes = [
   {
     path: '/course',
     component: Layout,
     name: 'CourseManagement',
-    meta: { title: '课程管理', icon: 'example' },
+    meta: {
+      title: '课程管理',
+      icon: 'example',
+      roles: ['1']
+    },
     children: [
       {
         path: 'category',

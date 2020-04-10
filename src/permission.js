@@ -26,19 +26,25 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      const hasGetUserInfo = store.getters.name
-      if (hasGetUserInfo) {
+      const hasRoles = store.getters.permission_routes && store.getters.permission_routes.length > 0
+      if (hasRoles) {
         next()
       } else {
         try {
-          // get user info
-          await store.dispatch('user/getInfo')
+          // // get user info
+          // await store.dispatch('user/getInfo')
+          const roles = store.getters.roles
+          const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+          router.options.routes = router.options.routes.concat(accessRoutes)
+          router.addRoutes(accessRoutes)
 
-          next()
+          // hack method to ensure that addRoutes is complete
+          // set the replace: true, so the navigation will not leave a history record
+          next({ ...to, replace: true })
         } catch (error) {
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')
-          Message.error(error || 'Has Error')
+          Message.error(error || '权限数据获取失败')
           next(`/login?redirect=${to.path}`)
           NProgress.done()
         }
