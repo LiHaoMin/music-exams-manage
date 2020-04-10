@@ -238,6 +238,27 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/swipe',
+    component: Layout,
+    name: 'SwipeManagement',
+    meta: { title: '轮播图管理', icon: 'example' },
+    children: [
+      {
+        path: 'swipe',
+        name: 'Swipe',
+        component: () => import('@/views/swipe/index'),
+        meta: { title: '轮播图', icon: 'example' }
+      },
+      {
+        path: 'swipe-edit',
+        name: 'SwipeEdit',
+        hidden: true,
+        component: () => import('@/views/swipe/Edit'),
+        meta: { title: '', icon: 'example' }
+      },
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
