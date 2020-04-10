@@ -203,7 +203,6 @@ export default {
       })
     },
     add() {
-      // TODO add
       this.$router.push({ name: 'onlineEdit'})
     },
     handleEdit(idx, row) {

@@ -7,13 +7,15 @@
         </el-form-item>
         <el-form-item label="课程封面" prop="pic">
           <el-upload
-            class="upload-demo"
-            drag
-            :limit="1"
+            list-type="picture-card"
+            :action="qnAction"
+            :data="qnData"
             :file-list="fileList"
-            action="https://jsonplaceholder.typicode.com/posts/">
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            :on-success="uploadPic"
+            :before-upload="beUpload"
+            :limit="1"
+            :on-remove="removePic">
+            <i class="el-icon-plus"></i>
             <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
           </el-upload>
         </el-form-item>
@@ -67,12 +69,12 @@
         </el-form-item>
         <el-form-item label="学习人数">
           <el-switch
-            v-model="isLearnNum"
+            v-model="form.isNumOfLearners"
             active-text="自定义数据"
             inactive-text="系统数据">
           </el-switch>
         </el-form-item>
-        <el-form-item label="已学习人数" v-if="isLearnNum">
+        <el-form-item label="已学习人数" v-if="form.isNumOfLearners">
           <el-col :span="6"><el-input v-model="form.numOfLearners" placeholder="请输入数量"></el-input></el-col>
           <el-col :span="5">&nbsp;&nbsp;&nbsp;人</el-col>
         </el-form-item>
@@ -81,7 +83,7 @@
       <el-divider></el-divider>
       <el-row v-if="videoList.length > 0">
         <div :key="index" v-for="(item,index) in videoList">
-          <p>第1节</p>
+          <p>第{{index + 1}}节</p>
           <el-col :span="6">课时名称：{{item.videoName}}</el-col>
           <el-col :span="6">时长：</el-col>
           <el-col :span="6">一级分类：{{item.firstCate}}</el-col>
@@ -101,13 +103,18 @@
           <el-form-item label="课时名称" prop="name">
             <el-input v-model="videoForm.videoName" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="课时名称" prop="name">
+          <el-form-item label="请上传课程视频">
             <el-upload
-              class="upload-demo"
-              action="https://jsonplaceholder.typicode.com/posts/"
-              :limit="1">
-              <el-button size="small" type="primary">点击上传</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+              list-type="picture-card"
+              :action="qnAction"
+              :data="qnData"
+              :file-list="vfileList"
+              :on-success="vuploadPic"
+              :before-upload="vbeUpload"
+              :limit="1"
+              :on-remove="removeVideo">
+              <i class="el-icon-plus"></i>
+              <div class="el-upload__tip" slot="tip"></div>
             </el-upload>
           </el-form-item>
         </el-form>
@@ -128,6 +135,7 @@ export default {
     return {
       isLearnNum: true,
       fileList: [],
+      vfileList: [],
       firstList: [],
       firstList2: [],
       form: {
@@ -154,13 +162,58 @@ export default {
       },
       videoList: [],
       videoForm: {},
-      dialogFormVisible: false
+      dialogFormVisible: false,
+      qnData: {
+        key: '',
+        token:  'ztuToON14AfyTHyLEPdVLVO9KTb-k57j8ayXEDqh:x37OOT_ZLdAz0sGwK1Kp3W6K7Tw=:eyJzY29wZSI6Im11c2ljLWV4YW1zIiwiZGVhZGxpbmUiOjE1ODY0NzcyMjV9'
+      },
+      qnAction: 'http://up.qiniu.com',
+      qnImg: 'http://q8ieryh01.bkt.clouddn.com/',
+      imageUrl: ''
     }
   },
   created() {
     this.getFirstList()
+    if (this.$route.params.id) {
+      request({
+        url: '/curriculum/inquiry_course',
+        method: 'get',
+        params: {curriculumId: this.$route.params.id}
+      }).then((res) => {
+        this.form = res.data.mCurriculum
+        this.form.typeB = res.data.mCurriculum.typeB+""
+        this.form.typeC = res.data.mCurriculum.typeC+""
+        this.getFirstList2()
+        this.videoList = res.data.mVideoList
+        this.fileList.push({url: this.form.curriculumImg})
+      })
+    }
   },
   methods: {
+    removePic(file, fileList) {
+      this.fileList = []
+      this.form.curriculumImg = null
+    },
+    uploadPic(response, file, fileList) {
+      this.fileList.push({url: this.qnImg +  response.key})
+      this.form.curriculumImg = this.qnImg +  response.key
+    },
+    beUpload(file, fileList) {
+      this.qnData.key =  new Date().getTime() + file.name
+      return true
+    },
+    removeVideo(file, fileList) {
+      this.vfileList = []
+      this.videoForm.videoUrl = null
+    },
+    vuploadPic(response, file, fileList) {
+      this.vfileList.push({url: this.qnImg +  response.key})
+      this.videoForm.videoUrl = this.qnImg +  response.key
+    },
+    vbeUpload(file, fileList) {
+      this.qnData.key =  new Date().getTime() + file.name
+      return true
+    },
     typeChange(data) {
       this.form.typeD = ''
       this.getFirstList2()
@@ -168,21 +221,39 @@ export default {
     add() {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          alert(JSON.stringify(this.form))
+          this.form.videoList = this.videoList
+          if (this.$route.params.id) {
+            this.edit()
+          } else  {
+            this.save()
+          }
         }
       })
-      this.form.videoList = this.videoList
+    },
+    save() {
       request({
         url: '/curriculum/add_curriculum',
         method: 'post',
         data: this.form
       }).then((res) => {
+        this.$router.replace({name:'online'})
+      })
+    },
+    edit() {
+      // TODO 删除视频
+      request({
+        url: '/curriculum/update_curriculum',
+        method: 'post',
+        data: this.form
+      }).then((res) => {
+        this.$router.replace({name:'online'})
       })
     },
     cancel() {
-      this.$router.back()
+      this.$router.replace({name:'online'})
     },
     addVideo() {
+      this.vfileList = []
       this.videoForm = {}
       this.dialogFormVisible = true
     },
