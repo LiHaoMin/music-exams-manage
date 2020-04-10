@@ -48,7 +48,7 @@
           <el-input v-model="form.teacherIntroduce" type="textarea" :rows="5" placeholder="请输入内容" maxlength="100" show-word-limit></el-input>
         </el-form-item>
         <el-form-item label="一级分类">
-          <el-select ref="typeA" v-model="form.typeA" placeholder="请选择">
+          <el-select ref="typeA" v-model="form.typeA" placeholder="请选择" @change="(e) => {$message.info('e')}">
             <el-option v-for="item in firstList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -79,51 +79,59 @@
           <el-col :span="5">&nbsp;&nbsp;&nbsp;人</el-col>
         </el-form-item>
       </el-col>
-      <span>&nbsp;</span>
-      <el-divider></el-divider>
-      <el-row v-if="videoList.length > 0">
-        <div :key="index" v-for="(item,index) in videoList">
-          <p>第{{index + 1}}节</p>
-          <el-col :span="6">课时名称：{{item.videoName}}</el-col>
-          <el-col :span="6">时长：</el-col>
-          <el-col :span="6">一级分类：{{item.firstCate}}</el-col>
-          <el-col :span="6">讲堂分类：{{item.typeCate}}</el-col>
-        </div>
-      </el-row>
-      <el-row>
-        <el-col></el-col>
-        <el-col><el-button type="primary" @click="addVideo">新增</el-button></el-col>
-      </el-row>
-      <el-row type="flex" justify="end">
-        <el-button type="success" @click="add">确认添加</el-button>
-        <el-button @click="cancel">取消</el-button>
-      </el-row>
-      <el-dialog :title="'第' + (videoList.length + 1) + '节'" :visible.sync="dialogFormVisible">
-        <el-form :model="videoForm">
-          <el-form-item label="课时名称" prop="name">
-            <el-input v-model="videoForm.videoName" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="请上传课程视频">
-            <el-upload
-              list-type="picture-card"
-              :action="qnAction"
-              :data="qnData"
-              :file-list="vfileList"
-              :on-success="vuploadPic"
-              :before-upload="vbeUpload"
-              :limit="1"
-              :on-remove="removeVideo">
-              <i class="el-icon-plus"></i>
-              <div class="el-upload__tip" slot="tip"></div>
-            </el-upload>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveVideo">立即添加</el-button>
-        </div>
-      </el-dialog>
     </el-form>
+    <span>&nbsp;</span>
+    <el-divider></el-divider>
+    <div :key="index" v-for="(item,index) in videoList">
+      <el-row>
+        <el-col>
+          <el-row>
+            <p>第{{index + 1}}节</p>
+            <el-col :span="6">课时名称：{{item.videoName}}</el-col>
+            <el-col :span="4">时长：</el-col>
+            <el-col :span="6">一级分类：{{firstCate}}</el-col>
+            <el-col :span="6">讲堂分类：{{typeCate}}</el-col>
+            <el-col :span="2">
+              <el-link :underline="false" type="danger" @click="deleteVideo(index, item)">删除</el-link>
+            </el-col>
+          </el-row>
+          <el-divider></el-divider>
+        </el-col>
+      </el-row>
+    </div>
+    <el-row>
+      <el-col :span="6"><div>第{{videoList.length + 1}}节</div></el-col>
+      <el-col :span="6"><el-button type="primary" @click="addVideo">新增</el-button></el-col>
+    </el-row>
+    <el-row type="flex" justify="end">
+      <el-button type="success" @click="add">确认添加</el-button>
+      <el-button @click="cancel">取消</el-button>
+    </el-row>
+    <el-dialog :title="'第' + (videoList.length + 1) + '节'" :visible.sync="dialogFormVisible">
+      <el-form :model="videoForm">
+        <el-form-item label="课时名称" prop="name">
+          <el-input v-model="videoForm.videoName" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="请上传课程视频">
+          <el-upload
+            list-type="picture-card"
+            :action="qnAction"
+            :data="qnData"
+            :file-list="vfileList"
+            :on-success="vuploadPic"
+            :before-upload="vbeUpload"
+            :limit="1"
+            :on-remove="removeVideo">
+            <i class="el-icon-plus"></i>
+            <div class="el-upload__tip" slot="tip"></div>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveVideo">立即添加</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -187,6 +195,17 @@ export default {
         this.videoList = res.data.mVideoList
         this.fileList.push({url: this.form.curriculumImg})
       })
+    }
+  },
+  computed: {
+    firstCate() {
+      return this.$refs.typeA.$data.selected.label
+    },
+    typeCate() {
+      const typeB = this.$refs.typeB.$data.selected.label ? this.$refs.typeB.$data.selected.label : ''
+      const typeC = this.$refs.typeC.$data.selected.label ? this.$refs.typeC.$data.selected.label : ''
+      const typeD = this.$refs.typeD.$data.selected.label ? this.$refs.typeD.$data.selected.label : ''
+      return typeB && typeC && typeD ?  typeB + '-' + typeC + '-' + typeD : ''
     }
   },
   methods: {
@@ -258,13 +277,24 @@ export default {
       this.dialogFormVisible = true
     },
     saveVideo() {
-      this.videoForm.firstCate = this.$refs.typeA.$data.selected.label
-      let typeB = this.$refs.typeB.$data.selected.label ? this.$refs.typeB.$data.selected.label : ''
-      let typeC = this.$refs.typeC.$data.selected.label ? this.$refs.typeC.$data.selected.label : ''
-      let typeD = this.$refs.typeD.$data.selected.label ? this.$refs.typeD.$data.selected.label : ''
-      this.videoForm.typeCate = typeB + '-' + typeC + '-' + typeD
       this.videoList.push(this.videoForm)
       this.dialogFormVisible = false
+    },
+    deleteVideo(idx, item) {
+      if (!item.id) {
+        this.videoList.splice(idx, 1)
+      }
+      request({
+        url: '/video',
+        method: 'post',
+        data: [{
+          curriculumId: item.curriculumId,
+          id: item.id,
+          isDelete: true
+        }]
+      }).then((res) => {
+        this.videoList.splice(idx, 1)
+      })
     },
     getFirstList() {
       request({
