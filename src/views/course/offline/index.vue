@@ -33,7 +33,7 @@
               <el-select v-model="listQuery.typeC" clearable  placeholder="请选择">
                 <el-option label="音乐考研" value="1"></el-option>
                 <el-option label="舞蹈考研" value="2"></el-option>
-                <el-option label="音乐留学" value="2"></el-option>
+                <el-option label="音乐留学" value="3"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item size="small">
@@ -141,6 +141,7 @@ export default {
   },
   created() {
     this.fetchData()
+    // TODO 搜索有问题
   },
   methods: {
     dateChange(time) {
@@ -157,10 +158,10 @@ export default {
       this.fetchData()
     },
     handleEdit(idx, row) {
-      // TODO handleEdit
+      this.$router.push({ name: 'offlineEdit', params: { id: row.id }})
     },
     add() {
-      // TODO add
+      this.$router.push({ name: 'offlineEdit'})
     },
     handleStatus(idx, row) {
       request({

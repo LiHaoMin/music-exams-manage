@@ -184,17 +184,24 @@ export const asyncRoutes = [
         meta: { title: '线上课程', icon: 'table' }
       },
       {
-        path: 'edit',
+        path: 'online-edit',
         name: 'onlineEdit',
         hidden: true,
         component: () => import('@/views/course/online/Edit'),
-        meta: { title: '编辑课程', icon: 'table' }
+        meta: { title: '课程', icon: 'table' }
       },
       {
         path: 'offline',
         name: 'offline',
         component: () => import('@/views/course/offline/index'),
         meta: { title: '线下课程', icon: 'table' }
+      },
+      {
+        path: 'offline-edit',
+        name: 'offlineEdit',
+        hidden: true,
+        component: () => import('@/views/course/offline/Edit'),
+        meta: { title: '课程', icon: 'table' }
       }
     ]
   },
@@ -222,6 +229,12 @@ export const asyncRoutes = [
         name: 'Student',
         component: () => import('@/views/user/student/index'),
         meta: { title: '学员', icon: 'example' }
+      },
+      {
+        path: 'teacher',
+        name: 'Teacher',
+        component: () => import('@/views/user/teacher/index'),
+        meta: { title: '讲师', icon: 'example' }
       }
     ]
   },

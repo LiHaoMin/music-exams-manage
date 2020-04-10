@@ -75,7 +75,7 @@
         </el-row>
       </div>
     </el-card>
-    <el-dialog title="添加分类" :visible.sync="dialogFormVisible">
+    <el-dialog title="用户信息" :visible.sync="dialogFormVisible">
       <el-row>
         <el-col :span="8">用户ID：{{currentRow.userId}}</el-col>
         <el-col :span="8">用户昵称：{{currentRow.name}}</el-col>
