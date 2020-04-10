@@ -173,7 +173,7 @@ export default {
       dialogFormVisible: false,
       qnData: {
         key: '',
-        token:  'ztuToON14AfyTHyLEPdVLVO9KTb-k57j8ayXEDqh:x37OOT_ZLdAz0sGwK1Kp3W6K7Tw=:eyJzY29wZSI6Im11c2ljLWV4YW1zIiwiZGVhZGxpbmUiOjE1ODY0NzcyMjV9'
+        token:  ''
       },
       qnAction: 'http://up.qiniu.com',
       qnImg: 'http://q8ieryh01.bkt.clouddn.com/',
@@ -196,6 +196,12 @@ export default {
         this.fileList.push({url: this.form.curriculumImg})
       })
     }
+    request({
+      url: '/user/qiniu',
+      method: 'get'
+    }).then((res) => {
+      this.qnData = res.data
+    })
   },
   computed: {
     firstCate() {
