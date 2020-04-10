@@ -259,6 +259,27 @@ export const asyncRoutes = [
       },
     ]
   },
+  {
+    path: '/system',
+    component: Layout,
+    name: 'SystemManagement',
+    meta: { title: '系统设置', icon: 'example' },
+    children: [
+      {
+        path: 'admin',
+        name: 'Admin',
+        component: () => import('@/views/system/index'),
+        meta: { title: '管理员设置', icon: 'example' }
+      },
+      {
+        path: 'admin-edit',
+        name: 'AdminEdit',
+        hidden: true,
+        component: () => import('@/views/system/Edit'),
+        meta: { title: '', icon: 'example' }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
