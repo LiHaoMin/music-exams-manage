@@ -258,15 +258,26 @@ export default {
         this.$router.replace({name:'online'})
       })
     },
-    edit() {
-      // TODO 删除视频
-      request({
+    async edit() {
+      await request({
         url: '/curriculum/update_curriculum',
         method: 'post',
         data: this.form
-      }).then((res) => {
-        this.$router.replace({name:'online'})
       })
+      // 添加视频
+      var videoListData = []
+      this.videoList.forEach((el) => {
+        if (!el.id) {
+          el.curriculumId = this.form.id
+          videoListData.push(el)
+        }
+      })
+      await request({
+        url: '/video/add_vnideo',
+        method: 'post',
+        data: videoListData
+      })
+      this.$router.replace({name:'online'})
     },
     cancel() {
       this.$router.replace({name:'online'})
