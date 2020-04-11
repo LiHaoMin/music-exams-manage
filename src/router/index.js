@@ -165,42 +165,44 @@ export const asyncRoutes = [
     path: '/course',
     component: Layout,
     name: 'CourseManagement',
+    alwaysShow: true,
     meta: {
       title: '课程管理',
-      icon: 'example'
+      icon: 'example',
+      roles: ['2', '-1']
     },
     children: [
       {
         path: 'category',
         name: 'Category',
         component: () => import('@/views/course/category/index'),
-        meta: { title: '课程分类', icon: 'table' }
+        meta: { title: '课程分类', roles: ['2'] }
       },
       {
         path: 'online',
         name: 'online',
         component: () => import('@/views/course/online/index'),
-        meta: { title: '线上课程', icon: 'table' }
+        meta: { title: '线上课程', roles: ['2', '-1'] }
       },
       {
         path: 'online-edit',
         name: 'onlineEdit',
         hidden: true,
         component: () => import('@/views/course/online/Edit'),
-        meta: { title: '课程', icon: 'table' }
+        meta: { title: '课程', roles: ['2', '-1'] }
       },
       {
         path: 'offline',
         name: 'offline',
         component: () => import('@/views/course/offline/index'),
-        meta: { title: '线下课程', icon: 'table' }
+        meta: { title: '线下课程', roles: ['2'] }
       },
       {
         path: 'offline-edit',
         name: 'offlineEdit',
         hidden: true,
         component: () => import('@/views/course/offline/Edit'),
-        meta: { title: '课程', icon: 'table' }
+        meta: { title: '课程', roles: ['2'] }
       }
     ]
   },
@@ -208,12 +210,17 @@ export const asyncRoutes = [
     path: '/order',
     component: Layout,
     name: 'OrderManagement',
+    meta: {
+      title: '账单管理',
+      icon: 'example',
+      roles: ['3']
+    },
     children: [
       {
         path: 'order',
         name: 'Order',
         component: () => import('@/views/order/index'),
-        meta: { title: '账单管理', icon: 'example' }
+        meta: { title: '账单管理', roles: ['3'] }
       }
     ]
   },
@@ -221,26 +228,26 @@ export const asyncRoutes = [
     path: '/user',
     component: Layout,
     name: 'UserManagement',
-    meta: { title: '用户管理', icon: 'example' },
+    meta: { title: '用户管理', icon: 'example', roles: ['4'] },
     children: [
       {
         path: 'student',
         name: 'Student',
         component: () => import('@/views/user/student/index'),
-        meta: { title: '学员', icon: 'example' }
+        meta: { title: '学员', roles: ['4'] }
       },
       {
         path: 'teacher',
         name: 'Teacher',
         component: () => import('@/views/user/teacher/index'),
-        meta: { title: '讲师', icon: 'example' }
+        meta: { title: '讲师', roles: ['4'] }
       },
       {
         path: 'teacher-edit',
         name: 'TeacherEdit',
         hidden: true,
         component: () => import('@/views/user/teacher/Edit'),
-        meta: { title: '', icon: 'example' }
+        meta: { title: '', roles: ['4'] }
       }
     ]
   },
@@ -248,20 +255,20 @@ export const asyncRoutes = [
     path: '/swipe',
     component: Layout,
     name: 'SwipeManagement',
-    meta: { title: '轮播图管理', icon: 'example' },
+    meta: { title: '轮播图管理', icon: 'example', roles: ['5'] },
     children: [
       {
         path: 'swipe',
         name: 'Swipe',
         component: () => import('@/views/swipe/index'),
-        meta: { title: '轮播图', icon: 'example' }
+        meta: { title: '轮播图', roles: ['5']}
       },
       {
         path: 'swipe-edit',
         name: 'SwipeEdit',
         hidden: true,
         component: () => import('@/views/swipe/Edit'),
-        meta: { title: '', icon: 'example' }
+        meta: { title: '', roles: ['5'] }
       },
     ]
   },
@@ -269,20 +276,20 @@ export const asyncRoutes = [
     path: '/system',
     component: Layout,
     name: 'SystemManagement',
-    meta: { title: '系统设置', icon: 'example' },
+    meta: { title: '系统设置', icon: 'example', roles: ['7'] },
     children: [
       {
         path: 'admin',
         name: 'Admin',
         component: () => import('@/views/system/index'),
-        meta: { title: '管理员设置', icon: 'example' }
+        meta: { title: '管理员设置', roles: ['7'] }
       },
       {
         path: 'admin-edit',
         name: 'AdminEdit',
         hidden: true,
         component: () => import('@/views/system/Edit'),
-        meta: { title: '', icon: 'example' }
+        meta: { title: '', roles: ['7'] }
       }
     ]
   },
@@ -290,13 +297,13 @@ export const asyncRoutes = [
     path: '/service',
     component: Layout,
     name: 'ServiceManagement',
-    meta: { title: '客服管理', icon: 'example' },
+    meta: { title: '客服管理', icon: 'example', roles: ['6'] },
     children: [
       {
         path: 'customer-service',
         name: 'CustomerService',
         component: () => import('@/views/service/index'),
-        meta: { title: '客服管理', icon: 'example' }
+        meta: { title: '客服管理', roles: ['6'] }
       },
     ]
   },

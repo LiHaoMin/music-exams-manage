@@ -58,6 +58,9 @@ const actions = {
         commit('SET_AVATAR', data.headImg)
         if (data.adminType)
           commit('SET_ROLES', JSON.parse(data.adminType))
+        if (data.userType === 3) {
+          commit('SET_ROLES', ['-1'])
+        }
         setToken(data.token)
         setName(data.userName)
         setUserType(data.userType)
