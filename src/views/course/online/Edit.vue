@@ -86,7 +86,7 @@
       <el-row>
         <el-col>
           <el-row>
-            <p>第{{index + 1}}节</p>
+            <p>第{{item.videoPosition}}节</p>
             <el-col :span="6">课时名称：{{item.videoName}}</el-col>
             <el-col :span="4">时长：</el-col>
             <el-col :span="6">一级分类：{{firstCate}}</el-col>
@@ -294,6 +294,7 @@ export default {
       this.dialogFormVisible = true
     },
     saveVideo() {
+      this.videoForm.videoPosition = this.videoList.length+ 1
       this.videoList.push(this.videoForm)
       this.dialogFormVisible = false
     },
