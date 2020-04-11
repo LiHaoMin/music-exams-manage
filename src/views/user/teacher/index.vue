@@ -69,8 +69,8 @@
                   <el-switch
                     @change="userSwitch($event, scope.row)"
                     v-model="scope.row.userEnable"
-                    active-color="#ff4949"
-                    inactive-color="#13ce66">
+                    active-color="#13ce66"
+                    inactive-color="#ff4949">
                   </el-switch>
                 </template>
               </el-table-column>
