@@ -2,8 +2,12 @@
   <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
+      <div class="head">
+        <img src="@/assets/logo.png" />
+        <h3 class="title">音乐考研管理平台</h3>
+      </div>
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">登录</h3>
       </div>
 
       <el-form-item prop="username">
@@ -41,7 +45,7 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;background-color: #37A38A" @click.native.prevent="handleLogin">登录</el-button>
 
     </el-form>
   </div>
@@ -176,16 +180,40 @@ $light_gray:#eee;
 .login-container {
   min-height: 100%;
   width: 100%;
-  background-color: $bg;
+  background-image: url("~@/assets/login_bg.png");
+  background-size: cover;
+  background-position: center;
   overflow: hidden;
 
+  .head {
+    display: flex;
+    align-items: center;
+    margin-bottom: 80px;
+  }
+  .head h3.title {
+    font-size: 30px;
+  }
+  .head img {
+    margin-right: 22px;
+  }
+
   .login-form {
-    position: relative;
+    position: absolute;
     width: 520px;
     max-width: 100%;
     padding: 160px 35px 0;
-    margin: 0 auto;
+    /*margin: 0 auto;*/
     overflow: hidden;
+    top: 5%;
+    right: 15%;
+  }
+  .el-form-item {
+    border: 1px solid #ddd;
+    background-color: #fff;
+  }
+
+  .el-input >>> input {
+    color: #C2C1C1;
   }
 
   .svg-container {
@@ -201,7 +229,7 @@ $light_gray:#eee;
 
     .title {
       font-size: 26px;
-      color: $light_gray;
+      color: #333;
       margin: 0px auto 40px auto;
       text-align: center;
       font-weight: bold;
