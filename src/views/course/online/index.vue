@@ -29,7 +29,7 @@
             </el-form-item>
           </div>
           <div>
-            <el-form-item size="small" label="上传人">
+            <el-form-item size="small" label="上传人" v-if="userType != 3">
               <el-select v-model="listQuery.userId" clearable  placeholder="请选择">
                 <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
@@ -44,7 +44,7 @@
                 <el-option v-for="item in typeB" :key="item.value" :label="item.name" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item size="small">
+            <el-form-item size="small" v-if="userType != 3">
               <el-button type="success" @click="recommend">设为推荐</el-button>
             </el-form-item>
             <el-form-item size="small">
@@ -55,7 +55,7 @@
       </div>
       <div class="content">
         <el-table ref="listTable" v-loading="listLoading" :data="list" element-loading-text="加载中..." border fit highlight-current-row>
-          <el-table-column type="selection" align="center" label="排序">
+          <el-table-column type="selection" align="center" label="排序" v-if="userType !== 3">
           </el-table-column>
           <el-table-column align="center" label="一级分类">
             <template slot-scope="scope">
@@ -117,6 +117,7 @@
 import request from '@/utils/request'
 import Pagination from '@/components/Pagination'
 import moment from 'moment'
+import { mapGetters } from 'vuex'
 
 export default {
   data() {
@@ -146,6 +147,11 @@ export default {
       firstList: []
     }
   },
+  computed: {
+    ...mapGetters([
+      'userType'
+    ])
+  },
   filters: {
     category(data) {
       const typeB = ['', '导师讲堂', '学长讲堂', '学员讲堂']
@@ -164,7 +170,7 @@ export default {
   },
   created() {
     this.fetchData()
-    this.getUserList()
+    if (this.userType != 3) this.getUserList()
     this.getFirstList()
   },
   methods: {

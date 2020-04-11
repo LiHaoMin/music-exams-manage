@@ -67,21 +67,23 @@
             <el-option v-for="item in firstList2" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="学习人数">
+        <el-form-item label="学习人数" v-if="userType != 3">
           <el-switch
             v-model="form.isNumOfLearners"
             active-text="自定义数据"
             inactive-text="系统数据">
           </el-switch>
         </el-form-item>
-        <el-form-item label="已学习人数" v-if="form.isNumOfLearners">
+        <el-form-item label="已学习人数" v-if="form.isNumOfLearners && userType != 3">
           <el-col :span="6"><el-input v-model="form.numOfLearners" placeholder="请输入数量"></el-input></el-col>
           <el-col :span="5">&nbsp;&nbsp;&nbsp;人</el-col>
         </el-form-item>
       </el-col>
+      <el-col :span="24">
+        <span>&nbsp;</span>
+        <el-divider></el-divider>
+      </el-col>
     </el-form>
-    <span>&nbsp;</span>
-    <el-divider></el-divider>
     <div :key="index" v-for="(item,index) in videoList">
       <el-row>
         <el-col>
@@ -90,7 +92,9 @@
             <el-col :span="6">课时名称：{{item.videoName}}</el-col>
             <el-col :span="4">时长：</el-col>
             <el-col :span="6">一级分类：{{firstCate}}</el-col>
-            <el-col :span="6">讲堂分类：{{typeCate}}</el-col>
+            <el-col :span="6">讲堂分类：{{typeCate}}
+              <span v-if="userType == 3">状态：{{item.type | videoType}}</span>
+            </el-col>
             <el-col :span="2">
               <el-link :underline="false" type="danger" @click="deleteVideo(index, item)">删除</el-link>
             </el-col>
@@ -137,6 +141,7 @@
 
 <script>
 import request from '@/utils/request'
+import { mapGetters } from 'vuex'
 
 export default {
   data() {
@@ -204,6 +209,9 @@ export default {
     })
   },
   computed: {
+    ...mapGetters([
+      'userType'
+    ]),
     firstCate() {
       return this.$refs.typeA.$data.selected.label
     },
@@ -212,6 +220,12 @@ export default {
       const typeC = this.$refs.typeC.$data.selected.label ? this.$refs.typeC.$data.selected.label : ''
       const typeD = this.$refs.typeD.$data.selected.label ? this.$refs.typeD.$data.selected.label : ''
       return typeB && typeC && typeD ?  typeB + '-' + typeC + '-' + typeD : ''
+    }
+  },
+  filters: {
+    videoType(data) {
+      const list = ['', '待审核', '审核不通过', '已上架', '', '已下架']
+      return data ? list[data] : '待审核'
     }
   },
   methods: {
@@ -294,9 +308,11 @@ export default {
       this.dialogFormVisible = true
     },
     saveVideo() {
-      this.videoForm.videoPosition = this.videoList.length+ 1
+      this.videoForm.videoPosition = this.videoList.length + 1
+      this.videoForm.type = 1
       this.videoList.push(this.videoForm)
       this.dialogFormVisible = false
+      // TODO 时长
     },
     deleteVideo(idx, item) {
       if (!item.id) {
