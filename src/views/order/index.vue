@@ -30,7 +30,7 @@
             </div>
             <div>
               <el-form-item size="small" label="上传人">
-                <el-select v-model="listQuery.userId" clearable  placeholder="请选择">
+                <el-select v-model="listQuery.ownerId" clearable  placeholder="请选择">
                   <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
@@ -59,7 +59,7 @@
                 <el-table-column align="center" label="排序">
                   <template slot-scope="scope">
                     <span v-if="scope.row.wxWithdrawal">已提现</span>
-                    <el-checkbox class="checkbox-none" :label="scope.row.id" v-else></el-checkbox>
+                    <el-checkbox class="checkbox-none" :label="scope.$index" v-else></el-checkbox>
                   </template>
                 </el-table-column>
                 <el-table-column align="center" label="订单编号">
@@ -69,7 +69,7 @@
                 </el-table-column>
                 <el-table-column align="center" label="付款时间">
                   <template slot-scope="scope">
-                    {{ scope.row | date }}
+                    {{ scope.row.gmtCreate | date }}
                   </template>
                 </el-table-column>
                 <el-table-column align="center" label="购买课程">
@@ -112,7 +112,7 @@
                 <el-table-column align="center" label="排序">
                   <template slot-scope="scope">
                     <span v-if="scope.row.wxWithdrawal">已提现</span>
-                    <el-checkbox class="checkbox-none" :label="scope.row.id" v-else></el-checkbox>
+                    <el-checkbox class="checkbox-none" :label="scope.$index" v-else></el-checkbox>
                   </template>
                 </el-table-column>
                 <el-table-column align="center" label="订单编号">
@@ -122,7 +122,7 @@
                 </el-table-column>
                 <el-table-column align="center" label="付款时间">
                   <template slot-scope="scope">
-                    {{ scope.row | date }}
+                    {{ scope.row.gmtCreate | date }}
                   </template>
                 </el-table-column>
                 <el-table-column align="center" label="购买课程">
@@ -233,8 +233,8 @@ export default {
       return data ? moment(data).format('YYYY-MM-DD HH:mm:ss') : ''
     },
     divideInto(data) {
-      if (data.userType === 3) return '平台发布'
-      if (data.userType === 2) return data.divideInto + '%'
+      if (data.userType === 2) return '平台发布'
+      if (data.userType === 3) return data.divideInto + '%'
     }
   },
   created() {
@@ -289,14 +289,19 @@ export default {
       }).then((res) => {
         this.currentRow = res.data
       })
-      // 付款时间对不上
     },
     add() {
       let sc = document.querySelectorAll('.checkbox-none input[type="checkbox"]:checked')
+      var dataList = []
       sc.forEach((el) => {
-        console.log(el.value)
+        var item = this.list[el.value]
+        dataList.push({
+          id: item.id,
+          ownerId: item.ownerId,
+          money: item.money
+        })
       })
-      // 提现参数不明
+      // TODO 提现参数不明
     },
     fetchData() {
       this.listLoading = true

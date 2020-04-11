@@ -235,6 +235,13 @@ export const asyncRoutes = [
         name: 'Teacher',
         component: () => import('@/views/user/teacher/index'),
         meta: { title: '讲师', icon: 'example' }
+      },
+      {
+        path: 'teacher-edit',
+        name: 'TeacherEdit',
+        hidden: true,
+        component: () => import('@/views/user/teacher/Edit'),
+        meta: { title: '', icon: 'example' }
       }
     ]
   },
@@ -278,6 +285,20 @@ export const asyncRoutes = [
         component: () => import('@/views/system/Edit'),
         meta: { title: '', icon: 'example' }
       }
+    ]
+  },
+  {
+    path: '/service',
+    component: Layout,
+    name: 'ServiceManagement',
+    meta: { title: '客服管理', icon: 'example' },
+    children: [
+      {
+        path: 'customer-service',
+        name: 'CustomerService',
+        component: () => import('@/views/service/index'),
+        meta: { title: '客服管理', icon: 'example' }
+      },
     ]
   },
 

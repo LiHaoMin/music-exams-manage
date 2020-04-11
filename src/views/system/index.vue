@@ -91,13 +91,13 @@ export default {
         type: 'warning'
       }).then(() => {
         // TODO 缺删除接口
-        // request({
-        //   url: '/user/update_user_content',
-        //   method: 'post',
-        //   data: { id: row.administratorsId, isDelete: true}
-        // }).then((res) => {
-        //   this.fetchData()
-        // })
+        request({
+          url: '/user/update_user_content',
+          method: 'post',
+          data: { id: row.administratorsId, isDelete: true}
+        }).then((res) => {
+          this.fetchData()
+        })
       })
     },
     fetchData() {
