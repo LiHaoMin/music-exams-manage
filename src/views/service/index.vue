@@ -355,7 +355,6 @@ export default {
   .msg {
     display: flex;
     padding: 15px 20px;
-    overflow: hidden;
   }
   .msg.left img {
     width: 60px;
