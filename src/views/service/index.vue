@@ -294,7 +294,7 @@ export default {
   }
   .chat-warp {
     width: 60%;
-    height: 80vh;
+    height: 70vh;
     display: flex;
     border: 2px solid #5a5e66;
   }
