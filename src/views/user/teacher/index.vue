@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-card>
       <div slot="header">
-        <el-form :inline="true" class="demo-form-inline">
+        <el-form :inline="true" class="demo-form-inline" label-width="100px">
           <el-form-item label="添加时间" size="small">
             <el-date-picker
               v-model="listQuery.time"

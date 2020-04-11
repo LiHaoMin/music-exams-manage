@@ -70,7 +70,7 @@
       </el-col>
       <el-col :span="6">
         <el-form-item label="资质证明" prop="certificate">
-          <el-col :span="18">
+          <el-col :span="24">
             <el-upload
               list-type="picture-card"
               :action="qnAction"

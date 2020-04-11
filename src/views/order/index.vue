@@ -2,7 +2,7 @@
   <div class="app-container">
       <el-card>
         <div slot="header">
-          <el-form :inline="true" class="demo-form-inline">
+          <el-form :inline="true" class="demo-form-inline" label-width="100px">
             <div>
               <el-form-item label="提现状态" size="small" >
                 <el-select v-model="listQuery.cashWithdrawal" clearable  placeholder="请选择">

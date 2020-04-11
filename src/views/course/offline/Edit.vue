@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :rules="rules"  :model="form" >
+    <el-form ref="form" :rules="rules"  :model="form" label-width="120px">
       <el-form-item label="实体课名称" prop="curriculumName">
         <el-col :span="12">
           <el-input v-model="form.curriculumName"></el-input>

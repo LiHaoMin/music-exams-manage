@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :rules="rules"  :model="form" >
+    <el-form ref="form" :rules="rules"  :model="form" label-width="120px">
       <el-col :span="11">
         <el-form-item label="课程名称" prop="curriculumName">
           <el-input v-model="form.curriculumName"></el-input>
@@ -103,14 +103,18 @@
         </el-col>
       </el-row>
     </div>
-    <el-row>
-      <el-col :span="6"><div>第{{videoList.length + 1}}节</div></el-col>
-      <el-col :span="6"><el-button type="primary" @click="addVideo">新增</el-button></el-col>
-    </el-row>
-    <el-row type="flex" justify="end">
-      <el-button type="success" @click="add">确认添加</el-button>
-      <el-button @click="cancel">取消</el-button>
-    </el-row>
+    <el-col :span="24">
+      <el-row>
+        <el-col :span="6"><div>第{{videoList.length + 1}}节</div></el-col>
+        <el-col :span="6"><el-button type="primary" @click="addVideo">新增</el-button></el-col>
+      </el-row>
+    </el-col>
+    <el-col :span="24">
+      <el-row type="flex" justify="end">
+        <el-button type="success" @click="add">确认添加</el-button>
+        <el-button @click="cancel">取消</el-button>
+      </el-row>
+    </el-col>
     <el-dialog :title="'第' + (videoList.length + 1) + '节'" :visible.sync="dialogFormVisible">
       <el-form :model="videoForm">
         <el-form-item label="课时名称" prop="name">

@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :rules="rules"  :model="form" >
+    <el-form ref="form" :rules="rules"  :model="form" label-width="100px">
       <el-form-item label="轮播图名称" prop="bannerName">
         <el-col :span="12">
           <el-input v-model="form.bannerName"></el-input>

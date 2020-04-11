@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-card>
       <div slot="header">
-        <el-form :inline="true" class="demo-form-inline">
+        <el-form :inline="true" class="demo-form-inline" label-width="100px">
           <div>
             <el-form-item label="上架状态" size="small" >
               <el-select v-model="listQuery.upperShelf" clearable  placeholder="请选择">
