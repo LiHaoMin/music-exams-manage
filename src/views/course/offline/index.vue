@@ -30,10 +30,10 @@
           </div>
           <div>
             <el-form-item size="small" label="分类">
-              <el-select v-model="listQuery.typeC" clearable  placeholder="请选择">
-                <el-option label="音乐考研" value="1"></el-option>
-                <el-option label="舞蹈考研" value="2"></el-option>
-                <el-option label="音乐留学" value="3"></el-option>
+              <el-select v-model="listQuery.typeA" clearable  placeholder="请选择">
+                <el-option label="音乐考研" value="51"></el-option>
+                <el-option label="舞蹈考研" value="52"></el-option>
+                <el-option label="音乐留学" value="53"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item size="small">
@@ -46,7 +46,7 @@
         <el-table ref="listTable" v-loading="listLoading" :data="list" element-loading-text="加载中..." border fit highlight-current-row>
           <el-table-column align="center" label="分类">
             <template slot-scope="scope">
-              {{ scope.row.typeC | category }}
+              {{ scope.row.classificationtringName }}
             </template>
           </el-table-column>
           <el-table-column align="center" label="实体课">
@@ -61,7 +61,7 @@
           </el-table-column>
           <el-table-column align="center" label="描述">
             <template slot-scope="scope">
-              // TODO 描述
+              {{ scope.row.briefIntroduction }}
             </template>
           </el-table-column>
           <el-table-column align="center" label="添加时间">
@@ -141,7 +141,6 @@ export default {
   },
   created() {
     this.fetchData()
-    // TODO 搜索有问题
   },
   methods: {
     dateChange(time) {

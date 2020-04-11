@@ -84,10 +84,10 @@
       </el-col>
       <el-col :span="14">
         <el-form-item label="选择实体课分类">
-          <el-select ref="typeC"  v-model="form.typeC" placeholder="请选择">
-            <el-option label="音乐" value="1"></el-option>
-            <el-option label="舞蹈" value="2"></el-option>
-            <el-option label="留学" value="3"></el-option>
+          <el-select ref="typeC"  v-model="form.typeA" placeholder="请选择">
+            <el-option label="音乐" value="51"></el-option>
+            <el-option label="舞蹈" value="52"></el-option>
+            <el-option label="留学" value="53"></el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -214,6 +214,8 @@ export default {
       this.$router.replace({name:'offline'})
     },
     save() {
+      // const typeA = [0,51,52,53]
+      // this.form.typeA = typeA[this.form.typeB]
       request({
         url: '/curriculum/add_curriculum',
         method: 'post',
