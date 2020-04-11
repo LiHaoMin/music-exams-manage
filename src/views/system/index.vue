@@ -90,11 +90,10 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // TODO 缺删除接口
         request({
           url: '/user/update_user_content',
           method: 'post',
-          data: { id: row.administratorsId, isDelete: true}
+          data: { id: row.userId, isDelete: true}
         }).then((res) => {
           this.fetchData()
         })

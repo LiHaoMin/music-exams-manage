@@ -149,6 +149,19 @@ export default {
     }).then((res) => {
       this.qnData = res.data
     })
+    if (this.$route.params.id) {
+      request({
+        url: '/user/lecturer_content',
+        method: 'get',
+        params: {id: this.$route.params.id}
+      }).then((res) => {
+        this.form = {... res.data.mLecturer, mCreateAccountBean: res.data.mUserInfo}
+        this.fileList.push({url: this.form.mCreateAccountBean.headPortrait})
+        this.fileList2.push({url: this.form.identityImgZ})
+        this.fileList3.push({url: this.form.identityImgF})
+        this.fileList4.push({url: this.form.certificate})
+      })
+    }
   },
   methods: {
     removePic(file, fileList) {
@@ -215,7 +228,16 @@ export default {
       this.$router.replace({name:'Teacher'})
     },
     edit() {
-      // TODO edit
+      request({
+        url: '/lecturer/update_lecturer',
+        method: 'post',
+        data: {
+          mUserInfo: this.form.mCreateAccountBean,
+          mLecturer: this.form
+        }
+      }).then((res) => {
+        this.$router.replace({name:'Teacher'})
+      })
     },
     save() {
       this.form.mCreateAccountBean.userEnable = true

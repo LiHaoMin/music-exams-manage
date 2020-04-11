@@ -16,7 +16,7 @@
               <el-table-column type="index" align="center" label="序号"></el-table-column>
               <el-table-column align="center" label="问题关键词/句">
                 <template slot-scope="scope">
-                  {{ scope.row.keyWord }} // TODO 问题关键词
+                  {{ scope.row.keyWord }}
                 </template>
               </el-table-column>
               <el-table-column align="center" label="回答">
@@ -52,7 +52,7 @@
                 <div class="chat-content">
                   <div class="messages">
                     <template v-for="(item,index) in messages">
-                      <div :key="index" v-if="!item.type" class="msg left">
+                      <div :key="index" v-if="item.type == 1" class="msg left">
                         <div>
                           <img :src="item.head_portrait" alt="头像" />
                         </div>
@@ -85,7 +85,7 @@
           <el-tab-pane label="帮助中心" name="help">
             <el-form :model="helpForm" label-position="top">
               <el-form-item label="帮助中心">
-                <el-input type="textarea" :rows="15" v-model="welcomeForm.answer" autocomplete="off"></el-input>
+                <el-input type="textarea" :rows="15" v-model="helpForm.content" autocomplete="off"></el-input>
               </el-form-item>
             </el-form>
             <el-row type="flex" justify="center">
@@ -186,10 +186,28 @@ export default {
         this.dialogFormRobot = false
       })
     },
-    saveHelp() {},
+    saveHelp() {
+      request({
+        url: '/help/update_help',
+        method: 'get',
+        params: this.helpForm
+      }).then((res) => {
+        if (res.data) {
+          this.$message('保存成功')
+        }
+      })
+    },
     handleClick(tab, event) {
       if (this.activeName === 'artificial') {
         this.getUserProblemList()
+      }
+      if (this.activeName === 'help') {
+        request({
+          url: '/help/get_help',
+          method: 'get'
+        }).then((res) => {
+          this.helpForm = res.data
+        })
       }
     },
     handleDelete(idx, row) {
@@ -198,18 +216,16 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // TODO handleDelete
-        // request({
-        //   url: '/curriculum/update_curriculum',
-        //   method: 'post',
-        //   data: {
-        //     id: row.id,
-        //     isDelete: true
-        //   }
-        // }).then((res) => {
-        //   this.pagination = { num: 1, size: 10 }
-        //   this.fetchData()
-        // })
+        request({
+          url: '/robot/update_welcome',
+          method: 'post',
+          data: {
+            id: row.id,
+            isDelete: true,
+          }
+        }).then((res) => {
+          this.fetchData()
+        })
       })
     },
     userClick(item) {
@@ -235,7 +251,16 @@ export default {
         problem: this.msgText,
         type: 2
       })
-      // TODO 添加接口
+      request({
+        url: '/answer/add_answer',
+        method: 'post',
+        data: {
+          answerContent: this.msgText,
+          userProblemId: this.currentUser.id
+        }
+      }).then((res) => {
+        this.msgText = ''
+      })
     },
     fetchData() {
       this.robotListLoading = true

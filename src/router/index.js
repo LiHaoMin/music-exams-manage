@@ -167,8 +167,7 @@ export const asyncRoutes = [
     name: 'CourseManagement',
     meta: {
       title: '课程管理',
-      icon: 'example',
-      roles: ['1']
+      icon: 'example'
     },
     children: [
       {
