@@ -15,6 +15,7 @@ export function removeToken() {
   Cookies.remove('admin_avatar')
   Cookies.remove('admin_userType')
   Cookies.remove('admin_roles')
+  Cookies.remove('admin_account')
   return Cookies.remove(TokenKey)
 }
 
@@ -45,4 +46,12 @@ export function getRoles() {
 
 export function setRoles(name) {
   return Cookies.set('admin_roles', name)
+}
+
+export function getAccount() {
+  return Cookies.get('admin_account')
+}
+
+export function setAccount(name) {
+  return Cookies.set('admin_account', name)
 }

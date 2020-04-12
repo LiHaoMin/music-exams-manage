@@ -8,7 +8,7 @@ import {
   getAvatar,
   getUserType,
   getRoles,
-  setUserType, setAvatar, setRoles
+  setUserType, setAvatar, setRoles, getAccount, setAccount
 } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -18,6 +18,7 @@ const getDefaultState = () => {
     name: getName(),
     avatar: getAvatar(),
     userType: getUserType(),
+    account: getAccount(),
     roles: getRoles() ? JSON.parse(getRoles()) : []
   }
 }
@@ -40,6 +41,9 @@ const mutations = {
   SET_USER_TYPE: (state, userType) => {
     state.userType = userType
   },
+  SET_ACCOUNT: (state, account) => {
+    state.account = account
+  },
   SET_ROLES: (state, roles) => {
     state.roles = roles
   }
@@ -56,6 +60,7 @@ const actions = {
         commit('SET_USER_TYPE', data.userType)
         commit('SET_NAME', data.userName)
         commit('SET_AVATAR', data.headImg)
+        commit('SET_ACCOUNT', username.trim())
         if (data.adminType) {
           commit('SET_ROLES', JSON.parse(data.adminType))
           setRoles(data.adminType)
@@ -68,6 +73,7 @@ const actions = {
         setName(data.userName)
         setUserType(data.userType)
         setAvatar(data.headImg)
+        setAccount(username.trim())
         resolve()
       }).catch(error => {
         reject(error)

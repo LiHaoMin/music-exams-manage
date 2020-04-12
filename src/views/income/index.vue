@@ -29,12 +29,6 @@
             </el-form-item>
           </div>
           <div>
-            <el-form-item size="small" label="上传人">
-              <el-select v-model="listQuery.ownerId" clearable  placeholder="请选择">
-                <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
-            </el-form-item>
-
             <el-form-item label="提现时间" size="small">
               <el-date-picker
                 v-model="listQuery.time2"
@@ -45,11 +39,6 @@
                 start-placeholder="开始日期"
                 end-placeholder="结束日期">
               </el-date-picker>
-            </el-form-item>
-            <el-form-item size="small" label="课程分类">
-              <el-select v-model="listQuery.ownerId" clearable  placeholder="请选择">
-                <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
             </el-form-item>
             <el-form-item size="small">
               <el-button type="success" @click="add">提现</el-button>
@@ -77,7 +66,7 @@
           </el-table-column>
           <el-table-column align="center" label="课程分类">
             <template slot-scope="scope">
-              {{ scope.row.classificationType }} // TODO 课程分类
+              {{ scope.row.classificationType | classificationType}}
             </template>
           </el-table-column>
           <el-table-column align="center" label="购买课程">
@@ -145,11 +134,16 @@ export default {
     date(data) {
 
       return data ? moment(data).format('YYYY-MM-DD HH:mm:ss') : ''
+    },
+    classificationType(data) {
+      if (data) {
+        return data == 1 || data == 2 ? '线上课程' : '线下课程'
+      }
+      return ''
     }
   },
   created() {
     this.fetchData()
-    this.getUserList()
   },
   methods: {
     dateChange1(time) {
@@ -209,14 +203,6 @@ export default {
         this.list = res.data.records
         this.pagination.total = res.data.total
         this.listLoading = false
-      })
-    },
-    getUserList() {
-      request({
-        url: '/user/upload_user_list',
-        method: 'get'
-      }).then((res) => {
-        this.userList = res.data
       })
     }
   }
