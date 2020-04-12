@@ -56,16 +56,18 @@ const actions = {
         commit('SET_USER_TYPE', data.userType)
         commit('SET_NAME', data.userName)
         commit('SET_AVATAR', data.headImg)
-        if (data.adminType)
+        if (data.adminType) {
           commit('SET_ROLES', JSON.parse(data.adminType))
+          setRoles(data.adminType)
+        }
         if (data.userType === 3) {
           commit('SET_ROLES', ['-1'])
+          setRoles(JSON.stringify(['-1']))
         }
         setToken(data.token)
         setName(data.userName)
         setUserType(data.userType)
         setAvatar(data.headImg)
-        setRoles(data.adminType)
         resolve()
       }).catch(error => {
         reject(error)
