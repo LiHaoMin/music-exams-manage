@@ -105,7 +105,8 @@ export default {
         value: '7',
         label: '系统设置'
       }],
-      passHolder: ''
+      passHolder: '',
+      mAdministrators: {}
     }
   },
   created() {
@@ -117,10 +118,10 @@ export default {
           id: this.$route.params.id
         }
       }).then((res) => {
-        alert(JSON.stringify(res.data))
         res.data.mUserInfo.password = null
         this.form = res.data.mUserInfo
-        this.form.adminType = JSON.parse(res.data.mAdministrators.adminType)
+        this.mAdministrators = res.data.mAdministrators
+        this.$set(this.form, 'adminType', JSON.parse(res.data.mAdministrators.adminType))
       })
     }
   },
@@ -139,9 +140,15 @@ export default {
     },
     edit() {
       request({
-        url: '/user/update_user_content',
+        url: '/administrators/update_admin',
         method: 'post',
-        data: this.form
+        data: {
+          mUserInfo: this.form,
+          mAdministrators: {
+            id: this.mAdministrators.id,
+            adminType: JSON.stringify(this.form.adminType)
+          }
+        }
       }).then((res) => {
         this.$router.replace({name:'Admin'})
       })

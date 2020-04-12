@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <component :is="currentRole" />
+    <component v-if="currentRole" :is="currentRole" />
   </div>
 </template>
 
@@ -14,7 +14,7 @@ export default {
   components: { adminDashboard, teacherDashboard },
   data() {
     return {
-      currentRole: 'adminDashboard'
+      currentRole: ''
     }
   },
   computed: {
@@ -25,6 +25,9 @@ export default {
   created() {
     if (this.roles.includes('-1')) {
       this.currentRole = 'teacherDashboard'
+    }
+    if (this.roles.includes('1')) {
+      this.currentRole = 'adminDashboard'
     }
   }
 }
