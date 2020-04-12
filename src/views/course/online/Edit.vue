@@ -84,8 +84,8 @@
         <el-divider></el-divider>
       </el-col>
     </el-form>
-    <div :key="index" v-for="(item,index) in videoList">
-      <el-row>
+    <el-col :span="24">
+      <el-row :key="index" v-for="(item,index) in videoList">
         <el-col>
           <el-row>
             <p>第{{item.videoPosition}}节</p>
@@ -102,8 +102,6 @@
           <el-divider></el-divider>
         </el-col>
       </el-row>
-    </div>
-    <el-col :span="24">
       <el-row>
         <el-col :span="6"><div>第{{videoList.length + 1}}节</div></el-col>
         <el-col :span="6"><el-button type="primary" @click="addVideo">新增</el-button></el-col>
