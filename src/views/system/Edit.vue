@@ -8,12 +8,12 @@
       </el-form-item>
       <el-form-item label="密码" prop="password">
         <el-col :span="12">
-          <el-input type="password" v-model="form.password"></el-input>
+          <el-input type="password" :placeholder="passHolder" v-model="form.password"></el-input>
         </el-col>
       </el-form-item>
       <el-form-item label="确认密码" prop="checkPass">
         <el-col :span="12">
-          <el-input type="password" v-model="form.checkPass"></el-input>
+          <el-input type="password" :placeholder="passHolder" v-model="form.checkPass"></el-input>
         </el-col>
       </el-form-item>
       <el-form-item label="管理员姓名" prop="name">
@@ -104,7 +104,24 @@ export default {
       }, {
         value: '7',
         label: '系统设置'
-      }]
+      }],
+      passHolder: ''
+    }
+  },
+  created() {
+    if (this.$route.params.id) {
+      request({
+        url: '/user/get_administrators_content',
+        method: 'get',
+        params: {
+          id: this.$route.params.id
+        }
+      }).then((res) => {
+        alert(JSON.stringify(res.data))
+        res.data.mUserInfo.password = null
+        this.form = res.data.mUserInfo
+        this.form.adminType = JSON.parse(res.data.mAdministrators.adminType)
+      })
     }
   },
   methods: {
@@ -121,17 +138,16 @@ export default {
       })
     },
     edit() {
-      // request({
-      //   url: '/banner/update_banner',
-      //   method: 'post',
-      //   data: this.form
-      // }).then((res) => {
-      //   this.$router.replace({name:'Swipe'})
-      // })
-      // TODO edit
+      request({
+        url: '/user/update_user_content',
+        method: 'post',
+        data: this.form
+      }).then((res) => {
+        this.$router.replace({name:'Admin'})
+      })
+      // TODO 密码重复不显示
     },
     save() {
-      // TODO 登录不了
       this.form.userEnable = true
       request({
         url: '/user/add_administrators',

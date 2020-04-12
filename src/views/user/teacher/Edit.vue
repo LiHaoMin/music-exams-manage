@@ -96,7 +96,7 @@
       <el-col>
         <el-form-item label="后台账号密码" prop="password">
           <el-col :span="6">
-            <el-input type="password" v-model="form.mCreateAccountBean.password"></el-input>
+            <el-input type="password" :placeholder="passHolder" v-model="form.mCreateAccountBean.password"></el-input>
           </el-col>
         </el-form-item>
       </el-col>
@@ -140,6 +140,7 @@ export default {
       fileList2: [],
       fileList3: [],
       fileList4: [],
+      passHolder: ''
     }
   },
   created() {
@@ -155,6 +156,8 @@ export default {
         method: 'get',
         params: {id: this.$route.params.id}
       }).then((res) => {
+        res.data.mUserInfo.password = null
+        this.passHolder = '********'
         this.form = {... res.data.mLecturer, mCreateAccountBean: res.data.mUserInfo}
         this.fileList.push({url: this.form.mCreateAccountBean.headPortrait})
         this.fileList2.push({url: this.form.identityImgZ})

@@ -50,7 +50,7 @@
         <el-table ref="listTable" v-loading="listLoading" :data="list" element-loading-text="加载中..." border fit highlight-current-row>
           <el-table-column align="center" label="排序">
             <template slot-scope="scope">
-              <span v-if="scope.row.wxWithdrawal">已提现</span>
+              <span v-if="scope.row.cashWithdrawalTime">已提现</span>
               <el-checkbox class="checkbox-none" :label="scope.$index" v-else></el-checkbox>
             </template>
           </el-table-column>
@@ -166,15 +166,8 @@ export default {
     },
     query() {
       this.pagination = { num: 1, size: 10 }
-      if (this.activeName === 'online') {
-        this.listQuery.onLine = true
-      }
-      if (this.activeName === 'offline') {
-        this.listQuery.onLine = false
-      }
       this.fetchData()
       // TODO 搜索有问题
-      // TODO 课程分类
     },
     add() {
       let sc = document.querySelectorAll('.checkbox-none input[type="checkbox"]:checked')
@@ -182,12 +175,17 @@ export default {
       sc.forEach((el) => {
         var item = this.list[el.value]
         dataList.push({
-          id: item.id,
-          ownerId: item.ownerId,
-          money: item.money
+          id: item.id
         })
       })
       // TODO 提现参数不明
+      request({
+        url: '/order/ls_sqtx',
+        method: 'post',
+        data: dataList
+      }).then((res) => {
+        this.fetchData()
+      })
     },
     fetchData() {
       this.listLoading = true
@@ -208,3 +206,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .checkbox-none >>>  .el-checkbox__label {
+    display: none;
+  }
+</style>

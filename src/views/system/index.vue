@@ -17,7 +17,7 @@
           </el-table-column>
           <el-table-column align="center" label="密码">
             <template slot-scope="scope">
-              // 密码
+              ********
             </template>
           </el-table-column>
           <el-table-column align="center" label="手机号">
@@ -81,8 +81,7 @@ export default {
       this.$router.push({name:'AdminEdit'})
     },
     handleEdit(idx,row) {
-      // this.$router.push({name:'AdminEdit', params: {obj: row}})
-      // TODO 缺编辑接口/获取数据
+      this.$router.push({name:'AdminEdit', params: {id: row.userId}})
     },
     handleDelete(idx,row) {
       this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
