@@ -169,7 +169,7 @@ export const asyncRoutes = [
     meta: {
       title: '课程管理',
       icon: 'example',
-      roles: ['2', '-1']
+      roles: ['2']
     },
     children: [
       {
@@ -182,14 +182,14 @@ export const asyncRoutes = [
         path: 'online',
         name: 'online',
         component: () => import('@/views/course/online/index'),
-        meta: { title: '线上课程', roles: ['2', '-1'] }
+        meta: { title: '线上课程', roles: ['2'] }
       },
       {
         path: 'online-edit',
         name: 'onlineEdit',
         hidden: true,
         component: () => import('@/views/course/online/Edit'),
-        meta: { title: '课程', roles: ['2', '-1'] }
+        meta: { title: '', roles: ['2'] }
       },
       {
         path: 'offline',
@@ -202,7 +202,32 @@ export const asyncRoutes = [
         name: 'offlineEdit',
         hidden: true,
         component: () => import('@/views/course/offline/Edit'),
-        meta: { title: '课程', roles: ['2'] }
+        meta: { title: '', roles: ['2'] }
+      }
+    ]
+  },
+  {
+    path: '/course',
+    component: Layout,
+    name: 'CourseManagement',
+    meta: {
+      title: '课程管理',
+      icon: 'example',
+      roles: ['-1']
+    },
+    children: [
+      {
+        path: 'online',
+        name: 'online',
+        component: () => import('@/views/course/online/index'),
+        meta: { title: '课程管理', icon: 'example', roles: ['-1'] }
+      },
+      {
+        path: 'online-edit',
+        name: 'onlineEdit',
+        hidden: true,
+        component: () => import('@/views/course/online/Edit'),
+        meta: { title: '', roles: ['-1'] }
       }
     ]
   },
