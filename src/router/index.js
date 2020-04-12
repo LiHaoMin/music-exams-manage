@@ -307,6 +307,34 @@ export const asyncRoutes = [
       },
     ]
   },
+  {
+    path: '/income',
+    component: Layout,
+    name: 'IncomeManagement',
+    meta: { title: '', icon: 'example', roles: ['-1'] },
+    children: [
+      {
+        path: 'income-index',
+        name: 'Income',
+        component: () => import('@/views/income/index'),
+        meta: { title: '课程收益', roles: ['-1'] }
+      },
+    ]
+  },
+  {
+    path: '/setting',
+    component: Layout,
+    name: 'SettingManagement',
+    meta: { title: '', icon: 'example', roles: ['-1'] },
+    children: [
+      {
+        path: 'setting-index',
+        name: 'Setting',
+        component: () => import('@/views/setting/index'),
+        meta: { title: '账号设置', roles: ['-1'] }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
