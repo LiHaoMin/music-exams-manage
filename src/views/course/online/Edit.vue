@@ -14,6 +14,7 @@
             :on-success="uploadPic"
             :before-upload="beUpload"
             :limit="1"
+            accept="image/png, image/jpeg, image/jpg"
             :on-remove="removePic">
             <i class="el-icon-plus"></i>
             <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -114,11 +115,11 @@
       </el-row>
     </el-col>
     <el-dialog :title="'第' + (videoList.length + 1) + '节'" :visible.sync="dialogFormVisible">
-      <el-form :model="videoForm">
-        <el-form-item label="课时名称" prop="name">
+      <el-form ref="videoForm" :model="videoForm" :rules="videoFormRules">
+        <el-form-item label="课时名称" prop="videoName">
           <el-input v-model="videoForm.videoName" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="请上传课程视频">
+        <el-form-item label="请上传课程视频" prop="videoUrl">
           <el-upload
             list-type="picture-card"
             :action="qnAction"
@@ -127,6 +128,7 @@
             :on-success="vuploadPic"
             :before-upload="vbeUpload"
             :limit="1"
+            accept="video/mp4,audio/mp4"
             :on-remove="removeVideo">
             <i class="el-icon-plus"></i>
             <div class="el-upload__tip" slot="tip"></div>
@@ -202,6 +204,16 @@ export default {
       },
       videoList: [],
       videoForm: {},
+      videoFormRules: {
+        videoName: [
+          { required: true, message: '请输入内容', trigger: 'blur' }
+        ],
+        videoUrl: [
+          { required: true, message: '请输入内容', trigger: 'blur', validator: (rule, value, callback) => {
+            if (!this.videoForm.videoUrl) callback(new Error('请输入内容'))
+            else callback()} }
+        ]
+      },
       dialogFormVisible: false,
       qnData: {
         key: '',
@@ -265,6 +277,14 @@ export default {
       this.form.curriculumImg = this.qnImg +  response.key
     },
     beUpload(file, fileList) {
+      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png') {
+        this.$message.error('上传图片只能是JPG/PNG格式!')
+        return false
+      }
+      if (file.size / 1024 > 500) {
+        this.$message.error('上传头像图片大小不能超过500KB!')
+        return false
+      }
       this.qnData.key =  new Date().getTime() + file.name
       return true
     },
@@ -275,8 +295,13 @@ export default {
     vuploadPic(response, file, fileList) {
       this.vfileList.push({url: this.qnImg +  response.key})
       this.videoForm.videoUrl = this.qnImg +  response.key
+      // TODO 时长
     },
     vbeUpload(file, fileList) {
+      if (file.type !== 'audio/mp4' && file.type !== 'video/mp4') {
+        this.$message.error('上传视频只能是MP4格式!')
+        return false
+      }
       this.qnData.key =  new Date().getTime() + file.name
       return true
     },
@@ -348,11 +373,14 @@ export default {
       this.dialogFormVisible = true
     },
     saveVideo() {
-      this.videoForm.videoPosition = this.videoList.length + 1
-      this.videoForm.type = 1
-      this.videoList.push(this.videoForm)
-      this.dialogFormVisible = false
-      // TODO 时长
+      this.$refs.videoForm.validate((valid) => {
+        if (valid) {
+          this.videoForm.videoPosition = this.videoList.length + 1
+          this.videoForm.type = 1
+          this.videoList.push(this.videoForm)
+          this.dialogFormVisible = false
+        }
+      })
     },
     deleteVideo(idx, item) {
       if (!item.id) {

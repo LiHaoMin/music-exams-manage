@@ -16,6 +16,7 @@
             :on-success="uploadPic"
             :before-upload="beUpload"
             :limit="1"
+            accept="image/png, image/jpeg, image/jpg"
             :on-remove="removePic">
             <i class="el-icon-plus"></i>
             <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -31,7 +32,7 @@
             :file-list="fileList2"
             :on-success="uploadPic2"
             :before-upload="beUpload2"
-            :limit="1"
+            accept="image/png, image/jpeg, image/jpg"
             :on-remove="removePic2">
             <i class="el-icon-plus"></i>
             <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -101,6 +102,7 @@
             :on-success="uploadPic3"
             :before-upload="beUpload3"
             :limit="1"
+            accept="video/mp4,audio/mp4"
             :on-remove="removePic3">
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -141,7 +143,7 @@ export default {
         ],
         rotationChart: [
           { required: true, message: '请输入内容', trigger: 'blur', validator: (rule, value, callback) => {
-            if (!this.form.rotationChart) callback(new Error('请输入内容'))
+            if (!this.rotationChart) callback(new Error('请输入内容'))
             else callback()} }
         ],
         teacher: [
@@ -180,6 +182,15 @@ export default {
       fileList3: []
     }
   },
+  computed: {
+    rotationChart() {
+      var str = ''
+      this.fileList2.forEach((item) => {
+        str += ',' + item.url
+      })
+      return str.substring(1)
+    }
+  },
   created() {
     if (this.$route.params.id) {
       request({
@@ -189,8 +200,13 @@ export default {
       }).then((res) => {
         this.form = res.data.mCurriculum
         this.fileList.push({url: this.form.curriculumImg})
-        this.fileList2.push({url: this.form.rotationChart})
         this.fileList3.push({url: this.form.videoIntroduction})
+        var urls = this.form.rotationChart.split(',')
+        if (urls) {
+          urls.forEach((itm) => {
+            this.fileList2.push({url: itm})
+          })
+        }
       })
     }
     request({
@@ -210,19 +226,39 @@ export default {
       this.form.curriculumImg = this.qnImg +  response.key
     },
     beUpload(file, fileList) {
+      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png') {
+        this.$message.error('上传图片只能是JPG/PNG格式!')
+        return false
+      }
+      if (file.size / 1024 > 500) {
+        this.$message.error('上传头像图片大小不能超过500KB!')
+        return false
+      }
       this.qnData.key =  new Date().getTime() + file.name
       return true
     },
     removePic2(file, fileList) {
-      this.fileList2 = []
+      var uid = file.uid
+      var index = -1
+      this.fileList2.forEach((el,idx) => {
+        if (el.uid == uid) index = idx
+      })
+      if (index != -1) this.fileList2.splice(index, 1)
       this.form.rotationChart = null
     },
     uploadPic2(response, file, fileList) {
       this.fileList2.push({url: this.qnImg +  response.key})
-      this.form.rotationChart = this.qnImg +  response.key
       // TODO 轮播图素材多张
     },
     beUpload2(file, fileList) {
+      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png') {
+        this.$message.error('上传图片只能是JPG/PNG格式!')
+        return false
+      }
+      if (file.size / 1024 > 500) {
+        this.$message.error('上传头像图片大小不能超过500KB!')
+        return false
+      }
       this.qnData.key =  new Date().getTime() + file.name
       return true
     },
@@ -235,6 +271,10 @@ export default {
       this.form.videoIntroduction = this.qnImg +  response.key
     },
     beUpload3(file, fileList) {
+      if (file.type !== 'audio/mp4' && file.type !== 'video/mp4') {
+        this.$message.error('上传视频只能是MP4格式!')
+        return false
+      }
       this.qnData.key =  new Date().getTime() + file.name
       return true
     },
@@ -252,6 +292,12 @@ export default {
       }
     },
     add() {
+      // 轮播图素材多张
+      var str = ''
+      this.fileList2.forEach((item) => {
+        str += ',' + item.url
+      })
+      this.form.rotationChart = str.substring(1)
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.form.videoList = this.videoList

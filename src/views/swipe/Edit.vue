@@ -15,6 +15,7 @@
           :on-success="uploadPic"
           :before-upload="beUpload"
           :limit="1"
+          accept="image/png, image/jpeg, image/jpg"
           :on-remove="removePic">
           <i class="el-icon-plus"></i>
           <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -50,7 +51,9 @@ export default {
           { required: true, message: '请输入内容', trigger: 'blur' }
         ],
         bannerUrl: [
-          { required: true, message: '请输入内容', trigger: 'blur' }
+          { required: true, message: '请输入内容', trigger: 'blur', validator: (rule, value, callback) => {
+            if (!this.form.bannerUrl) callback(new Error('请输入内容'))
+            else callback()} }
         ],
         bannerPath: [
           { required: true, message: '请输入内容', trigger: 'blur' }
@@ -87,6 +90,14 @@ export default {
       this.form.bannerUrl = this.qnImg +  response.key
     },
     beUpload(file, fileList) {
+      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png') {
+        this.$message.error('上传图片只能是JPG/PNG格式!')
+        return false
+      }
+      if (file.size / 1024 > 500) {
+        this.$message.error('上传头像图片大小不能超过500KB!')
+        return false
+      }
       this.qnData.key =  new Date().getTime() + file.name
       return true
     },

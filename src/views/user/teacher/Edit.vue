@@ -25,6 +25,7 @@
             :on-success="uploadPic"
             :before-upload="beUpload"
             :limit="1"
+            accept="image/png, image/jpeg, image/jpg"
             :on-remove="removePic">
             <i class="el-icon-plus"></i>
             <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -47,6 +48,7 @@
               :on-success="uploadPic2"
               :before-upload="beUpload2"
               :limit="1"
+              accept="image/png, image/jpeg, image/jpg"
               :on-remove="removePic2">
               <i class="el-icon-plus"></i>
               <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -61,6 +63,7 @@
               :on-success="uploadPic3"
               :before-upload="beUpload3"
               :limit="1"
+              accept="image/png, image/jpeg, image/jpg"
               :on-remove="removePic3">
               <i class="el-icon-plus"></i>
               <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -79,6 +82,7 @@
               :on-success="uploadPic4"
               :before-upload="beUpload4"
               :limit="1"
+              accept="image/png, image/jpeg, image/jpg"
               :on-remove="removePic4">
               <i class="el-icon-plus"></i>
               <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -221,6 +225,14 @@ export default {
       this.form.mCreateAccountBean.headPortrait = this.qnImg +  response.key
     },
     beUpload(file, fileList) {
+      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png') {
+        this.$message.error('上传图片只能是JPG/PNG格式!')
+        return false
+      }
+      if (file.size / 1024 > 500) {
+        this.$message.error('上传头像图片大小不能超过500KB!')
+        return false
+      }
       this.qnData.key =  new Date().getTime() + file.name
       return true
     },
@@ -233,6 +245,14 @@ export default {
       this.form.identityImgZ = this.qnImg +  response.key
     },
     beUpload2(file, fileList) {
+      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png') {
+        this.$message.error('上传图片只能是JPG/PNG格式!')
+        return false
+      }
+      if (file.size / 1024 > 500) {
+        this.$message.error('上传头像图片大小不能超过500KB!')
+        return false
+      }
       this.qnData.key =  new Date().getTime() + file.name
       return true
     },
@@ -245,6 +265,14 @@ export default {
       this.form.identityImgF = this.qnImg +  response.key
     },
     beUpload3(file, fileList) {
+      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png') {
+        this.$message.error('上传图片只能是JPG/PNG格式!')
+        return false
+      }
+      if (file.size / 1024 > 500) {
+        this.$message.error('上传头像图片大小不能超过500KB!')
+        return false
+      }
       this.qnData.key =  new Date().getTime() + file.name
       return true
     },
@@ -257,6 +285,14 @@ export default {
       this.form.certificate = this.qnImg +  response.key
     },
     beUpload4(file, fileList) {
+      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png') {
+        this.$message.error('上传图片只能是JPG/PNG格式!')
+        return false
+      }
+      if (file.size / 1024 > 500) {
+        this.$message.error('上传头像图片大小不能超过500KB!')
+        return false
+      }
       this.qnData.key =  new Date().getTime() + file.name
       return true
     },
