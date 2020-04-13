@@ -5,7 +5,7 @@
         <el-form-item label="课程名称" prop="curriculumName">
           <el-input v-model="form.curriculumName"></el-input>
         </el-form-item>
-        <el-form-item label="课程封面" prop="pic">
+        <el-form-item label="课程封面" prop="curriculumImg">
           <el-upload
             list-type="picture-card"
             :action="qnAction"
@@ -41,18 +41,18 @@
         <el-form-item label="讲师姓名" prop="teacherName">
           <el-input v-model="form.teacherName" placeholder="请输入名称" maxlength="20" show-word-limit></el-input>
         </el-form-item>
-        <el-form-item label="讲师尊称">
+        <el-form-item label="讲师尊称" prop="teacherCall">
           <el-input v-model="form.teacherCall" placeholder="请输入名称" maxlength="20" show-word-limit></el-input>
         </el-form-item>
-        <el-form-item label="讲师介绍">
+        <el-form-item label="讲师介绍" prop="teacherIntroduce">
           <el-input v-model="form.teacherIntroduce" type="textarea" :rows="5" placeholder="请输入内容" maxlength="100" show-word-limit></el-input>
         </el-form-item>
-        <el-form-item label="一级分类">
+        <el-form-item label="一级分类" prop="typeA">
           <el-select ref="typeA" v-model="form.typeA" placeholder="请选择" @change="(e) => {$message.info('e')}">
             <el-option v-for="item in firstList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="讲堂分类">
+        <el-form-item label="讲堂分类" prop="typeB">
           <el-select ref="typeB" @change="typeChange" v-model="form.typeB" placeholder="请选择">
             <el-option label="导师讲堂" value="1"></el-option>
             <el-option label="学长讲堂" value="2"></el-option>
@@ -71,10 +71,10 @@
           <el-switch
             v-model="form.isNumOfLearners"
             active-text="自定义数据"
-            inactive-text="系统数据">
+            inactive-text="系统数据" @change="switchChange">
           </el-switch>
         </el-form-item>
-        <el-form-item label="已学习人数" v-if="form.isNumOfLearners && userType != 3">
+        <el-form-item label="已学习人数" prop="numOfLearners" v-if="form.isNumOfLearners && userType != 3">
           <el-col :span="6"><el-input v-model="form.numOfLearners" placeholder="请输入数量"></el-input></el-col>
           <el-col :span="5">&nbsp;&nbsp;&nbsp;人</el-col>
         </el-form-item>
@@ -157,22 +157,47 @@ export default {
         typeB: '',
         typeC: '',
         typeD: '',
+        upperShelf: false
       },
       rules: {
         curriculumName: [
           { required: true, message: '请输入内容', trigger: 'blur' }
         ],
+        curriculumImg: [
+          { required: true, message: '请输入内容', trigger: 'blur', validator: (rule, value, callback) => {
+            if (!this.form.curriculumImg) callback(new Error('请输入内容'))
+            else callback()} }
+        ],
         upperShelf: [
           { required: true, message: '请输入内容', trigger: 'blur' }
         ],
         money: [
-          { required: true, message: '请输入内容', trigger: 'blur' }
+          { required: true, trigger: 'blur', validator: (rule, value, callback) => {
+            if (!value) callback(new Error('请输入内容'))
+            else if (!/^(-?\d+)(\.\d+)?$/.test(value)) callback(new Error('请输入数字'))
+            else callback()}
+          }
         ],
         briefIntroduction: [
           { required: true, message: '请输入内容', trigger: 'blur' }
         ],
         teacherName: [
           { required: true, message: '请输入内容', trigger: 'blur' }
+        ],
+        teacherCall: [
+          { required: true, message: '请输入内容', trigger: 'blur' }
+        ],
+        teacherIntroduce: [
+          { required: true, message: '请输入内容', trigger: 'blur' }
+        ],
+        typeA: [
+          { required: true, message: '请输入内容', trigger: 'blur' }
+        ],
+        typeB: [
+          { required: true, message: '请输入内容', trigger: 'blur', validator: (rule, value, callback) => {
+            if (!this.form.typeB || !this.form.typeC || !this.form.typeD) callback(new Error('请输入内容'))
+            else callback()}
+          }
         ]
       },
       videoList: [],
@@ -258,6 +283,19 @@ export default {
     typeChange(data) {
       this.form.typeD = ''
       this.getFirstList2()
+    },
+    switchChange(e) {
+      if (e) {
+        this.rules.numOfLearners = [
+          { required: true, trigger: 'blur', validator: (rule, value, callback) => {
+            if (!value) callback(new Error('请输入内容'))
+            else if (!/^(-?\d+)(\.\d+)?$/.test(value)) callback(new Error('请输入数字'))
+            else callback()}
+          }
+        ]
+      } else {
+        delete this.rules.numOfLearners
+      }
     },
     add() {
       this.$refs.form.validate((valid) => {
