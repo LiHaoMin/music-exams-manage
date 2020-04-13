@@ -51,7 +51,7 @@
           </el-table-column>
           <el-table-column align="center" label="上次付费时间">
             <template slot-scope="scope">
-              // TODO 上次付费时间
+              {{ scope.row.gmtCreate | date}}
             </template>
           </el-table-column>
           <el-table-column align="center" label="账户禁用">
@@ -84,7 +84,7 @@
       <el-row>
         <el-col :span="8">订单数量：{{currentRow.num}}</el-col>
         <el-col :span="8">付费总额：{{currentRow.money}}</el-col>
-        <el-col :span="8">上次付费时间：// TODO 上次付费时间</el-col>
+        <el-col :span="8">上次付费时间：{{currentRow.gmtCreate | date}}</el-col>
       </el-row>
       <el-table v-loading="detailListLoading" :data="detailList" element-loading-text="加载中..." stripe>
         <el-table-column align="center" label="课程分类">
@@ -141,7 +141,7 @@ export default {
   },
   filters: {
     date(data) {
-      return moment(data).format('YYYY-MM-DD HH:mm:ss')
+      return data ? moment(data).format('YYYY-MM-DD HH:mm:ss') : ''
     }
   },
   components: {

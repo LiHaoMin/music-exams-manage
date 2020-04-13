@@ -56,7 +56,7 @@
           </el-table-column>
           <el-table-column align="center" label="封面">
             <template slot-scope="scope">
-              // TODO 封面
+              <img :src="scope.row.curriculumImg">
             </template>
           </el-table-column>
           <el-table-column align="center" label="描述">
@@ -213,3 +213,12 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .app-container >>> .el-table__row  img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    object-position: center;
+  }
+</style>

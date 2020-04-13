@@ -27,7 +27,7 @@
           </el-table-column>
           <el-table-column align="center" label="上传人">
             <template slot-scope="scope">
-              // TODO 上传人
+              {{ scope.row.name}}
             </template>
           </el-table-column>
           <el-table-column align="center" label="添加时间">

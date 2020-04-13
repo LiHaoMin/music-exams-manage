@@ -285,7 +285,7 @@ export default {
       request({
         url: '/order/registration_information',
         method: 'get',
-        params: {orderId: row.asorderNumber}
+        params: {orderId: row.id}
       }).then((res) => {
         this.currentRow = res.data
       })
