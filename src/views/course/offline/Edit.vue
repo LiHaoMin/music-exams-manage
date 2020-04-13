@@ -53,16 +53,16 @@
         </el-form-item>
       </el-col>
       <el-col :span="6">
-        <el-form-item label="学习人数" prop="curriculumName">
+        <el-form-item label="学习人数">
             <el-switch
               v-model="form.isNumOfLearners"
               active-text="自定义数据"
-              inactive-text="系统数据">
+              inactive-text="系统数据" @change="switchChange">
             </el-switch>
         </el-form-item>
       </el-col>
       <el-col :span="6">
-        <el-form-item label="已报名人数" v-if="form.isNumOfLearners">
+        <el-form-item prop="numOfLearners" label="已报名人数" v-if="form.isNumOfLearners">
           <el-col :span="6"><el-input v-model="form.numOfLearners" placeholder="请输入数量"></el-input></el-col>
           <el-col :span="5">&nbsp;&nbsp;&nbsp;人</el-col>
         </el-form-item>
@@ -83,7 +83,7 @@
         </el-form-item>
       </el-col>
       <el-col :span="14">
-        <el-form-item label="选择实体课分类">
+        <el-form-item label="选择实体课分类" prop="typeA">
           <el-select ref="typeC"  v-model="form.typeA" placeholder="请选择">
             <el-option label="音乐" value="51"></el-option>
             <el-option label="舞蹈" value="52"></el-option>
@@ -92,7 +92,7 @@
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item label="视频介绍" prop="pic">
+        <el-form-item label="视频介绍" prop="videoIntroduction">
           <el-upload
             list-type="picture-card"
             :action="qnAction"
@@ -127,8 +127,48 @@ import request from '@/utils/request'
 export default {
   data() {
     return {
-      form: {},
-      rules: {},
+      form: {
+        upperShelf: false
+      },
+      rules: {
+        curriculumName: [
+          { required: true, message: '请输入内容', trigger: 'blur' }
+        ],
+        curriculumImg: [
+          { required: true, message: '请输入内容', trigger: 'blur', validator: (rule, value, callback) => {
+            if (!this.form.curriculumImg) callback(new Error('请输入内容'))
+            else callback()} }
+        ],
+        rotationChart: [
+          { required: true, message: '请输入内容', trigger: 'blur', validator: (rule, value, callback) => {
+            if (!this.form.rotationChart) callback(new Error('请输入内容'))
+            else callback()} }
+        ],
+        teacher: [
+          { required: true, message: '请输入内容', trigger: 'blur' }
+        ],
+        teacherTelephone: [
+          { required: true, trigger: 'blur', validator: (rule, value, callback) => {
+            if (!value) callback(new Error('请输入内容'))
+            else if (!/^[1][3,4,5,7,8][0-9]{9}$/.test(value)) callback(new Error('请输入正确的手机号'))
+            else callback()}
+          }
+        ],
+        upperShelf: [
+          { required: true, message: '请输入内容', trigger: 'blur' }
+        ],
+        typeA: [
+          { required: true, message: '请输入内容', trigger: 'blur' }
+        ],
+        videoIntroduction: [
+          { required: true, message: '请输入内容', trigger: 'blur', validator: (rule, value, callback) => {
+            if (!this.form.videoIntroduction) callback(new Error('请输入内容'))
+            else callback()} }
+        ],
+        briefIntroduction: [
+          { required: true, message: '请输入内容', trigger: 'blur' }
+        ]
+      },
       qnData: {
         key: '',
         token: ''
@@ -197,6 +237,19 @@ export default {
     beUpload3(file, fileList) {
       this.qnData.key =  new Date().getTime() + file.name
       return true
+    },
+    switchChange(e) {
+      if (e) {
+        this.rules.numOfLearners = [
+          { required: true, trigger: 'blur', validator: (rule, value, callback) => {
+            if (!value) callback(new Error('请输入内容'))
+            else if (!/^(-?\d+)(\.\d+)?$/.test(value)) callback(new Error('请输入数字'))
+            else callback()}
+          }
+        ]
+      } else {
+        delete this.rules.numOfLearners
+      }
     },
     add() {
       this.$refs.form.validate((valid) => {
