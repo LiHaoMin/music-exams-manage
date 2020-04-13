@@ -7,8 +7,8 @@
       </div>
     </el-card>
     <el-dialog title="修改密码" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
-        <el-form-item label="新密码">
+      <el-form ref="form" :model="form" :rules="rules">
+        <el-form-item label="新密码"prop="password">
           <el-col :span="12">
             <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
           </el-col>
@@ -30,6 +30,15 @@ export default {
   data() {
     return {
       form: {},
+      rules: {
+        password: [
+          { required: true, trigger: 'blur', validator: (rule, value, callback) => {
+            if (!value) callback(new Error('请输入内容'))
+            else if (!/^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/.test(value)) callback(new Error('最少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符'))
+            else callback()}
+          }
+        ]
+      },
       dialogFormVisible: false
     }
   },
@@ -43,13 +52,17 @@ export default {
       this.dialogFormVisible = true
     },
     save() {
-      request({
-        url: '/user/update_user_content',
-        method: 'post',
-        data: this.form
-      }).then((res) => {
-        if (res.data) {
-          this.dialogFormVisible = false
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          request({
+            url: '/user/update_user_content',
+            method: 'post',
+            data: this.form
+          }).then((res) => {
+            if (res.data) {
+              this.dialogFormVisible = false
+            }
+          })
         }
       })
     }

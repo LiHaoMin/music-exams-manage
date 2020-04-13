@@ -94,11 +94,11 @@
           </el-tab-pane>
         </el-tabs>
         <el-dialog title="机器人问答" :visible.sync="dialogFormRobot">
-          <el-form :model="robotForm">
-            <el-form-item label="问题关键词/句">
+          <el-form ref="robotForm" :rules="robotFormRules" :model="robotForm">
+            <el-form-item label="问题关键词/句" prop="keyWord">
               <el-input v-model="robotForm.keyWord" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="回答">
+            <el-form-item label="回答" prop="answer">
               <el-input v-model="robotForm.answer" autocomplete="off"></el-input>
             </el-form-item>
           </el-form>
@@ -135,6 +135,14 @@ export default {
       robotList: [],
       dialogFormRobot: false,
       robotForm: {},
+      robotFormRules: {
+        keyWord: [
+          { required: true, message: '请输入内容', trigger: 'blur' }
+        ],
+        answer: [
+          { required: true, message: '请输入内容', trigger: 'blur' }
+        ]
+      },
       dialogFormWelcome: false,
       welcomeForm: {},
       helpForm: {},
@@ -177,13 +185,17 @@ export default {
       this.robotForm = {}
     },
     saveRobot() {
-      request({
-        url: '/robot/add_robot',
-        method: 'post',
-        data: this.robotForm
-      }).then((res) => {
-        this.fetchData()
-        this.dialogFormRobot = false
+      this.$refs.robotForm.validate((valid) => {
+        if (valid) {
+          request({
+            url: '/robot/add_robot',
+            method: 'post',
+            data: this.robotForm
+          }).then((res) => {
+            this.fetchData()
+            this.dialogFormRobot = false
+          })
+        }
       })
     },
     saveHelp() {

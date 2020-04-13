@@ -52,8 +52,8 @@ import request from '@/utils/request'
 export default {
   data() {
     var validatePass2 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请再次输入密码'))
+      if (!value) {
+        callback(new Error('请输入内容'))
       } else if (value !== this.form.password) {
         callback(new Error('两次输入密码不一致!'))
       } else {
@@ -64,20 +64,28 @@ export default {
       form: {},
       rules: {
         account: [
-          { required: true, message: '请输入内容', trigger: 'blur' }
+          { required: true, trigger: 'blur', validator: (rule, value, callback) => {
+            if (!value) callback(new Error('请输入内容'))
+            else if (!/^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$/.test(value)) callback(new Error('6至20位，以字母开头，字母，数字，减号，下划线'))
+            else callback()} }
         ],
         password: [
-          { required: true, message: '请输入内容', trigger: 'blur' }
+          { required: true, trigger: 'blur', validator: (rule, value, callback) => {
+            if (!value) callback(new Error('请输入内容'))
+            else if (!/^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/.test(value)) callback(new Error('最少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符'))
+            else callback()} }
         ],
         checkPass: [
-          { validator: validatePass2, trigger: 'blur' },
-          { required: true, message: '请输入内容', trigger: 'blur' },
+          { required: true, trigger: 'blur', validator: validatePass2 }
         ],
         name: [
           { required: true, message: '请输入内容', trigger: 'blur' }
         ],
         telephone: [
-          { required: true, message: '请输入内容', trigger: 'blur' }
+          { required: true, trigger: 'blur', validator: (rule, value, callback) => {
+            if (!value) callback(new Error('请输入内容'))
+            else if (!/^[1][3,4,5,7,8][0-9]{9}$/.test(value)) callback(new Error('请输入正确的手机号'))
+            else callback()} }
         ],
         adminType: [
           { required: true, message: '请输入内容', trigger: 'blur' }

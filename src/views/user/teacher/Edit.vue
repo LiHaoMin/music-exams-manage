@@ -129,7 +129,52 @@ export default {
       form: {
         mCreateAccountBean: {}
       },
-      rules: {},
+      rules: {
+        name: [
+          { required: true, message: '请输入内容', trigger: 'blur', validator: (rule, value, callback) => {
+            if (!this.form.mCreateAccountBean.name) callback(new Error('请输入内容'))
+            else callback()} }
+        ],
+        lecturerName: [
+          { required: true, message: '请输入内容', trigger: 'blur' }
+        ],
+        headPortrait: [
+          { required: true, message: '请输入内容', trigger: 'blur', validator: (rule, value, callback) => {
+            if (!this.form.mCreateAccountBean.headPortrait) callback(new Error('请输入内容'))
+            else callback()} }
+        ],
+        lecturerIntroduce: [
+          { required: true, message: '请输入内容', trigger: 'blur' }
+        ],
+        identityImg: [
+          { required: true, message: '请输入内容', trigger: 'blur', validator: (rule, value, callback) => {
+            if (!this.form.identityImgZ || this.form.identityImgF) callback(new Error('请输入内容'))
+            else callback()} }
+        ],
+        certificate: [
+          { required: true, message: '请输入内容', trigger: 'blur', validator: (rule, value, callback) => {
+            if (!this.form.certificate) callback(new Error('请输入内容'))
+            else callback()} }
+        ],
+        account: [
+          { required: true, trigger: 'blur', validator: (rule, value, callback) => {
+            if (!this.form.mCreateAccountBean.account) callback(new Error('请输入内容'))
+            else if (!/^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$/.test(this.form.mCreateAccountBean.account)) callback(new Error('6至20位，以字母开头，字母，数字，减号，下划线'))
+            else callback()} }
+        ],
+        password: [
+          { required: true, trigger: 'blur', validator: (rule, value, callback) => {
+            if (!this.form.mCreateAccountBean.password) callback(new Error('请输入内容'))
+            else if (!/^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/.test(this.form.mCreateAccountBean.password)) callback(new Error('最少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符'))
+            else callback()} }
+        ],
+        divideInto: [
+          { required: true, trigger: 'blur', validator: (rule, value, callback) => {
+            if (!value) callback(new Error('请输入内容'))
+            else if (!/^(-?\d+)(\.\d+)?$/.test(value)) callback(new Error('请输入数字'))
+            else callback()}}
+        ]
+      },
       qnData: {
         key: '',
         token: ''
