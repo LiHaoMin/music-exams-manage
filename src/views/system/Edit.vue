@@ -52,9 +52,9 @@ import request from '@/utils/request'
 export default {
   data() {
     var validatePass2 = (rule, value, callback) => {
-      if (!value) {
+      if (!value && !this.$route.params.id) {
         callback(new Error('请输入内容'))
-      } else if (value !== this.form.password) {
+      } else if (value && value !== this.form.password) {
         callback(new Error('两次输入密码不一致!'))
       } else {
         callback()
@@ -71,8 +71,8 @@ export default {
         ],
         password: [
           { required: true, trigger: 'blur', validator: (rule, value, callback) => {
-            if (!value) callback(new Error('请输入内容'))
-            else if (!/^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/.test(value)) callback(new Error('最少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符'))
+            if (!value && !this.$route.params.id) callback(new Error('请输入内容'))
+            else if (value && !/^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/.test(value)) callback(new Error('最少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符'))
             else callback()} }
         ],
         checkPass: [
@@ -126,6 +126,7 @@ export default {
           id: this.$route.params.id
         }
       }).then((res) => {
+        this.passHolder = '********'
         res.data.mUserInfo.password = null
         this.form = res.data.mUserInfo
         this.mAdministrators = res.data.mAdministrators
@@ -160,7 +161,6 @@ export default {
       }).then((res) => {
         this.$router.replace({name:'Admin'})
       })
-      // TODO 密码重复不显示
     },
     save() {
       this.form.userEnable = true

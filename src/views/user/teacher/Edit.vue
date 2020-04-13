@@ -168,8 +168,8 @@ export default {
         ],
         password: [
           { required: true, trigger: 'blur', validator: (rule, value, callback) => {
-            if (!this.form.mCreateAccountBean.password) callback(new Error('请输入内容'))
-            else if (!/^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/.test(this.form.mCreateAccountBean.password)) callback(new Error('最少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符'))
+            if (!this.form.mCreateAccountBean.password && !this.$route.params.id) callback(new Error('请输入内容'))
+            else if (this.form.mCreateAccountBean.password && !/^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/.test(this.form.mCreateAccountBean.password)) callback(new Error('最少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符'))
             else callback()} }
         ],
         divideInto: [
