@@ -89,7 +89,7 @@
           <el-row>
             <p>第{{item.videoPosition}}节</p>
             <el-col :span="6">课时名称：{{item.videoName}}</el-col>
-            <el-col :span="4">时长：</el-col>
+            <el-col :span="4">时长：{{item.videoTime | videoTime}}</el-col>
             <el-col :span="6">一级分类：{{firstCate}}</el-col>
             <el-col :span="6">讲堂分类：{{typeCate}}
               <span v-if="userType == 3">状态：{{item.type | videoType}}</span>
@@ -264,6 +264,9 @@ export default {
     videoType(data) {
       const list = ['', '待审核', '审核不通过', '已上架', '', '已下架']
       return data ? list[data] : '待审核'
+    },
+    videoTime(data) {
+      return (data / 60).toFixed(2) + '分钟'
     }
   },
   methods: {
@@ -339,15 +342,24 @@ export default {
         if (valid) {
           this.videoForm.videoPosition = this.videoList.length + 1
           this.videoForm.type = 1
-          this.videoList.push(this.videoForm)
           this.dialogFormVisible = false
+          // 时长
+          request({
+            url: this.videoForm.videoUrl + '?avinfo',
+            method: 'get'
+          }).then((res) => {
+            if (res && res.format) {
+              this.videoForm.videoTime = parseInt(res.format.duration)
+              this.videoList.push(this.videoForm)
+            }
+          })
         }
-        // TODO 时长
       })
     },
     deleteVideo(idx, item) {
       if (!item.id) {
         this.videoList.splice(idx, 1)
+        return
       }
       request({
         url: '/video',
