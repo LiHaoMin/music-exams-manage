@@ -118,17 +118,17 @@
           <el-input v-model="videoForm.videoName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="请上传课程视频" prop="videoUrl">
-          <upload-image
+          <UploadVideo
             :action="qnAction"
             :fileType="['mp4']"
-            :fileSize="10"
+            :fileSize="50"
             :data="qnData"
             :size="150"
             thumbSuffix="?vframe/jpg/offset/1/w/150/h/150"
             accept="video/mp4,audio/mp4"
             v-model="videoForm.videoUrl"
             :responseFn="(response, file, fileList) => qnImg +  response.key">
-          </upload-image>
+          </UploadVideo>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -142,6 +142,7 @@
 <script>
 import request from '@/utils/request'
 import UploadImage from '@/components/UploadImage/UploadImage'
+import UploadVideo from "@/components/UploadVideo/UploadVideo"
 import { mapGetters } from 'vuex'
 
 export default {
@@ -220,7 +221,8 @@ export default {
     }
   },
   components: {
-    UploadImage
+    UploadImage,
+    UploadVideo
   },
   created() {
     this.getFirstList()

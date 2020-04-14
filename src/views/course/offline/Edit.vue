@@ -92,17 +92,17 @@
       </el-col>
       <el-col :span="12">
         <el-form-item label="视频介绍" prop="videoIntroduction">
-          <UploadImage
+          <UploadVideo
             :action="qnAction"
             :fileType="['mp4']"
-            :fileSize="10"
+            :fileSize="50"
             :data="qnData"
             :size="150"
             thumbSuffix="?vframe/jpg/offset/1/w/150/h/150"
             accept="video/mp4,audio/mp4"
             v-model="form.videoIntroduction"
             :responseFn="(response, file, fileList) => qnImg +  response.key">
-          </UploadImage>
+          </UploadVideo>
         </el-form-item>
       </el-col>
       <el-col :span="15">
@@ -123,6 +123,7 @@
 <script>
 import request from '@/utils/request'
 import UploadImage from '@/components/UploadImage/UploadImage'
+import UploadVideo from "@/components/UploadVideo/UploadVideo"
 
 export default {
   data() {
@@ -184,6 +185,7 @@ export default {
     }
   },
   components: {
+    UploadVideo,
     UploadImage
   },
   created() {
