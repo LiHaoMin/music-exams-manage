@@ -6,19 +6,17 @@
           <el-input v-model="form.curriculumName"></el-input>
         </el-form-item>
         <el-form-item label="课程封面" prop="curriculumImg">
-          <el-upload
-            list-type="picture-card"
+          <upload-image
             :action="qnAction"
+            :fileType="['png', 'jpg']"
+            :fileSize="0.5"
             :data="qnData"
-            :file-list="fileList"
-            :on-success="uploadPic"
-            :before-upload="beUpload"
-            :limit="1"
-            accept="image/png, image/jpeg, image/jpg"
-            :on-remove="removePic">
-            <i class="el-icon-plus"></i>
-            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-          </el-upload>
+            :size="150"
+            thumbSuffix="?imageView2/1/w/150/h/150"
+            accept="image/jpeg,image/png"
+            v-model="form.curriculumImg"
+            :responseFn="(response, file, fileList) => qnImg +  response.key">
+          </upload-image>
         </el-form-item>
         <el-form-item label="课程状态" prop="upperShelf">
           <el-switch
@@ -115,24 +113,22 @@
       </el-row>
     </el-col>
     <el-dialog :title="'第' + (videoList.length + 1) + '节'" :visible.sync="dialogFormVisible">
-      <el-form ref="videoForm" :model="videoForm" :rules="videoFormRules">
+      <el-form ref="videoForm" :model="videoForm" :rules="videoFormRules" label-position="top">
         <el-form-item label="课时名称" prop="videoName">
           <el-input v-model="videoForm.videoName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="请上传课程视频" prop="videoUrl">
-          <el-upload
-            list-type="picture-card"
+          <upload-image
             :action="qnAction"
+            :fileType="['mp4']"
+            :fileSize="10"
             :data="qnData"
-            :file-list="vfileList"
-            :on-success="vuploadPic"
-            :before-upload="vbeUpload"
-            :limit="1"
+            :size="150"
+            thumbSuffix="?vframe/jpg/offset/1/w/150/h/150"
             accept="video/mp4,audio/mp4"
-            :on-remove="removeVideo">
-            <i class="el-icon-plus"></i>
-            <div class="el-upload__tip" slot="tip"></div>
-          </el-upload>
+            v-model="videoForm.videoUrl"
+            :responseFn="(response, file, fileList) => qnImg +  response.key">
+          </upload-image>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -145,14 +141,13 @@
 
 <script>
 import request from '@/utils/request'
+import UploadImage from '@/components/UploadImage/UploadImage'
 import { mapGetters } from 'vuex'
 
 export default {
   data() {
     return {
       isLearnNum: true,
-      fileList: [],
-      vfileList: [],
       firstList: [],
       firstList2: [],
       form: {
@@ -224,6 +219,9 @@ export default {
       imageUrl: ''
     }
   },
+  components: {
+    UploadImage
+  },
   created() {
     this.getFirstList()
     if (this.$route.params.id) {
@@ -237,7 +235,6 @@ export default {
         this.form.typeC = res.data.mCurriculum.typeC+""
         this.getFirstList2()
         this.videoList = res.data.mVideoList
-        this.fileList.push({url: this.form.curriculumImg})
       })
     }
     request({
@@ -268,43 +265,6 @@ export default {
     }
   },
   methods: {
-    removePic(file, fileList) {
-      this.fileList = []
-      this.form.curriculumImg = null
-    },
-    uploadPic(response, file, fileList) {
-      this.fileList.push({url: this.qnImg +  response.key})
-      this.form.curriculumImg = this.qnImg +  response.key
-    },
-    beUpload(file, fileList) {
-      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png') {
-        this.$message.error('上传图片只能是JPG/PNG格式!')
-        return false
-      }
-      if (file.size / 1024 > 500) {
-        this.$message.error('上传头像图片大小不能超过500KB!')
-        return false
-      }
-      this.qnData.key =  new Date().getTime() + file.name
-      return true
-    },
-    removeVideo(file, fileList) {
-      this.vfileList = []
-      this.videoForm.videoUrl = null
-    },
-    vuploadPic(response, file, fileList) {
-      this.vfileList.push({url: this.qnImg +  response.key})
-      this.videoForm.videoUrl = this.qnImg +  response.key
-      // TODO 时长
-    },
-    vbeUpload(file, fileList) {
-      if (file.type !== 'audio/mp4' && file.type !== 'video/mp4') {
-        this.$message.error('上传视频只能是MP4格式!')
-        return false
-      }
-      this.qnData.key =  new Date().getTime() + file.name
-      return true
-    },
     typeChange(data) {
       this.form.typeD = ''
       this.getFirstList2()
@@ -380,6 +340,7 @@ export default {
           this.videoList.push(this.videoForm)
           this.dialogFormVisible = false
         }
+        // TODO 时长
       })
     },
     deleteVideo(idx, item) {

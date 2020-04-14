@@ -17,19 +17,17 @@
       </el-col>
       <el-col :span="12">
         <el-form-item label="讲师头像" prop="headPortrait">
-          <el-upload
-            list-type="picture-card"
+          <UploadImage
             :action="qnAction"
+            :fileType="['png', 'jpg']"
+            :fileSize="0.5"
             :data="qnData"
-            :file-list="fileList"
-            :on-success="uploadPic"
-            :before-upload="beUpload"
-            :limit="1"
-            accept="image/png, image/jpeg, image/jpg"
-            :on-remove="removePic">
-            <i class="el-icon-plus"></i>
-            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-          </el-upload>
+            :size="150"
+            thumbSuffix="?imageView2/1/w/150/h/150"
+            accept="image/jpeg,image/png"
+            v-model="form.mCreateAccountBean.headPortrait"
+            :responseFn="(response, file, fileList) => qnImg +  response.key">
+          </UploadImage>
         </el-form-item>
       </el-col>
       <el-col :span="13">
@@ -40,53 +38,47 @@
       <el-col :span="18">
         <el-form-item label="身份证照片" prop="identityImg">
           <el-col :span="10">
-            <el-upload
-              list-type="picture-card"
+            <UploadImage
               :action="qnAction"
+              :fileType="['png', 'jpg']"
+              :fileSize="0.5"
               :data="qnData"
-              :file-list="fileList2"
-              :on-success="uploadPic2"
-              :before-upload="beUpload2"
-              :limit="1"
-              accept="image/png, image/jpeg, image/jpg"
-              :on-remove="removePic2">
-              <i class="el-icon-plus"></i>
-              <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-            </el-upload>
+              :size="150"
+              thumbSuffix="?imageView2/1/w/150/h/150"
+              accept="image/jpeg,image/png"
+              v-model="form.identityImgZ"
+              :responseFn="(response, file, fileList) => qnImg +  response.key">
+            </UploadImage>
           </el-col>
           <el-col :span="10">
-            <el-upload
-              list-type="picture-card"
+            <UploadImage
               :action="qnAction"
+              :fileType="['png', 'jpg']"
+              :fileSize="0.5"
               :data="qnData"
-              :file-list="fileList3"
-              :on-success="uploadPic3"
-              :before-upload="beUpload3"
-              :limit="1"
-              accept="image/png, image/jpeg, image/jpg"
-              :on-remove="removePic3">
-              <i class="el-icon-plus"></i>
-              <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-            </el-upload>
+              :size="150"
+              thumbSuffix="?imageView2/1/w/150/h/150"
+              accept="image/jpeg,image/png"
+              v-model="form.identityImgF"
+              :responseFn="(response, file, fileList) => qnImg +  response.key">
+            </UploadImage>
           </el-col>
         </el-form-item>
       </el-col>
       <el-col :span="6">
         <el-form-item label="资质证明" prop="certificate">
           <el-col :span="24">
-            <el-upload
-              list-type="picture-card"
+            <UploadImage
               :action="qnAction"
+              :fileType="['png', 'jpg']"
+              :fileSize="0.5"
               :data="qnData"
-              :file-list="fileList4"
-              :on-success="uploadPic4"
-              :before-upload="beUpload4"
-              :limit="1"
-              accept="image/png, image/jpeg, image/jpg"
-              :on-remove="removePic4">
-              <i class="el-icon-plus"></i>
-              <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-            </el-upload>
+              :size="150"
+              thumbSuffix="?imageView2/1/w/150/h/150"
+              accept="image/jpeg,image/png"
+              v-model="form.certificate"
+              :responseFn="(response, file, fileList) => qnImg +  response.key">
+            </UploadImage>
           </el-col>
         </el-form-item>
       </el-col>
@@ -126,6 +118,7 @@
 
 <script>
 import request from '@/utils/request'
+import UploadImage from '@/components/UploadImage/UploadImage'
 
 export default {
   data() {
@@ -152,7 +145,7 @@ export default {
         ],
         identityImg: [
           { required: true, message: '请输入内容', trigger: 'blur', validator: (rule, value, callback) => {
-            if (!this.form.identityImgZ || this.form.identityImgF) callback(new Error('请输入内容'))
+            if (!this.form.identityImgZ || !this.form.identityImgF) callback(new Error('请输入内容'))
             else callback()} }
         ],
         certificate: [
@@ -185,12 +178,11 @@ export default {
       },
       qnAction: 'http://up.qiniu.com',
       qnImg: 'http://q8ieryh01.bkt.clouddn.com/',
-      fileList: [],
-      fileList2: [],
-      fileList3: [],
-      fileList4: [],
       passHolder: ''
     }
+  },
+  components: {
+    UploadImage
   },
   created() {
     request({
@@ -208,94 +200,10 @@ export default {
         res.data.mUserInfo.password = null
         this.passHolder = '********'
         this.form = {... res.data.mLecturer, mCreateAccountBean: res.data.mUserInfo}
-        this.fileList.push({url: this.form.mCreateAccountBean.headPortrait})
-        this.fileList2.push({url: this.form.identityImgZ})
-        this.fileList3.push({url: this.form.identityImgF})
-        this.fileList4.push({url: this.form.certificate})
       })
     }
   },
   methods: {
-    removePic(file, fileList) {
-      this.fileList = []
-      this.form.mCreateAccountBean.headPortrait = null
-    },
-    uploadPic(response, file, fileList) {
-      this.fileList.push({url: this.qnImg +  response.key})
-      this.form.mCreateAccountBean.headPortrait = this.qnImg +  response.key
-    },
-    beUpload(file, fileList) {
-      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png') {
-        this.$message.error('上传图片只能是JPG/PNG格式!')
-        return false
-      }
-      if (file.size / 1024 > 500) {
-        this.$message.error('上传头像图片大小不能超过500KB!')
-        return false
-      }
-      this.qnData.key =  new Date().getTime() + file.name
-      return true
-    },
-    removePic2(file, fileList) {
-      this.fileList2 = []
-      this.form.identityImgZ = null
-    },
-    uploadPic2(response, file, fileList) {
-      this.fileList2.push({url: this.qnImg +  response.key})
-      this.form.identityImgZ = this.qnImg +  response.key
-    },
-    beUpload2(file, fileList) {
-      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png') {
-        this.$message.error('上传图片只能是JPG/PNG格式!')
-        return false
-      }
-      if (file.size / 1024 > 500) {
-        this.$message.error('上传头像图片大小不能超过500KB!')
-        return false
-      }
-      this.qnData.key =  new Date().getTime() + file.name
-      return true
-    },
-    removePic3(file, fileList) {
-      this.fileList3 = []
-      this.form.identityImgF = null
-    },
-    uploadPic3(response, file, fileList) {
-      this.fileList3.push({url: this.qnImg +  response.key})
-      this.form.identityImgF = this.qnImg +  response.key
-    },
-    beUpload3(file, fileList) {
-      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png') {
-        this.$message.error('上传图片只能是JPG/PNG格式!')
-        return false
-      }
-      if (file.size / 1024 > 500) {
-        this.$message.error('上传头像图片大小不能超过500KB!')
-        return false
-      }
-      this.qnData.key =  new Date().getTime() + file.name
-      return true
-    },
-    removePic4(file, fileList) {
-      this.fileList4 = []
-      this.form.certificate = null
-    },
-    uploadPic4(response, file, fileList) {
-      this.fileList4.push({url: this.qnImg +  response.key})
-      this.form.certificate = this.qnImg +  response.key
-    },
-    beUpload4(file, fileList) {
-      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png') {
-        this.$message.error('上传图片只能是JPG/PNG格式!')
-        return false
-      }
-      if (file.size / 1024 > 500) {
-        this.$message.error('上传头像图片大小不能超过500KB!')
-        return false
-      }
-      this.qnData.key =  new Date().getTime() + file.name
-      return true
-    },
     add() {
       this.$refs.form.validate((valid) => {
         if (valid) {

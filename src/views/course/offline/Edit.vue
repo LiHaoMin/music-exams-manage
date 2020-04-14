@@ -8,35 +8,33 @@
       </el-form-item>
       <el-col :span="12">
         <el-form-item label="文章封面" prop="curriculumImg">
-          <el-upload
-            list-type="picture-card"
+          <UploadImage
             :action="qnAction"
+            :fileType="['png', 'jpg']"
+            :fileSize="0.5"
             :data="qnData"
-            :file-list="fileList"
-            :on-success="uploadPic"
-            :before-upload="beUpload"
-            :limit="1"
-            accept="image/png, image/jpeg, image/jpg"
-            :on-remove="removePic">
-            <i class="el-icon-plus"></i>
-            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-          </el-upload>
+            :size="150"
+            thumbSuffix="?imageView2/1/w/150/h/150"
+            accept="image/jpeg,image/png"
+            v-model="form.curriculumImg"
+            :responseFn="(response, file, fileList) => qnImg +  response.key">
+          </UploadImage>
         </el-form-item>
       </el-col>
       <el-col :span="12">
         <el-form-item label="轮播图素材" prop="rotationChart">
-          <el-upload
-            list-type="picture-card"
+          <UploadImage
             :action="qnAction"
+            :fileType="['png', 'jpg']"
+            :fileSize="0.5"
             :data="qnData"
-            :file-list="fileList2"
-            :on-success="uploadPic2"
-            :before-upload="beUpload2"
-            accept="image/png, image/jpeg, image/jpg"
-            :on-remove="removePic2">
-            <i class="el-icon-plus"></i>
-            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-          </el-upload>
+            :size="150"
+            thumbSuffix="?imageView2/1/w/150/h/150"
+            accept="image/jpeg,image/png"
+            v-model="images"
+            multiple
+            :responseFn="(response, file, fileList) => qnImg +  response.key">
+          </UploadImage>
         </el-form-item>
       </el-col>
       <el-col :span="6">
@@ -94,18 +92,17 @@
       </el-col>
       <el-col :span="12">
         <el-form-item label="视频介绍" prop="videoIntroduction">
-          <el-upload
-            list-type="picture-card"
+          <UploadImage
             :action="qnAction"
+            :fileType="['mp4']"
+            :fileSize="10"
             :data="qnData"
-            :file-list="fileList3"
-            :on-success="uploadPic3"
-            :before-upload="beUpload3"
-            :limit="1"
+            :size="150"
+            thumbSuffix="?vframe/jpg/offset/1/w/150/h/150"
             accept="video/mp4,audio/mp4"
-            :on-remove="removePic3">
-            <i class="el-icon-plus"></i>
-          </el-upload>
+            v-model="form.videoIntroduction"
+            :responseFn="(response, file, fileList) => qnImg +  response.key">
+          </UploadImage>
         </el-form-item>
       </el-col>
       <el-col :span="15">
@@ -125,6 +122,7 @@
 
 <script>
 import request from '@/utils/request'
+import UploadImage from '@/components/UploadImage/UploadImage'
 
 export default {
   data() {
@@ -177,19 +175,16 @@ export default {
       },
       qnAction: 'http://up.qiniu.com',
       qnImg: 'http://q8ieryh01.bkt.clouddn.com/',
-      fileList: [],
-      fileList2: [],
-      fileList3: []
+      images: []
     }
   },
   computed: {
     rotationChart() {
-      var str = ''
-      this.fileList2.forEach((item) => {
-        str += ',' + item.url
-      })
-      return str.substring(1)
+      return this.images.join(',')
     }
+  },
+  components: {
+    UploadImage
   },
   created() {
     if (this.$route.params.id) {
@@ -199,13 +194,8 @@ export default {
         params: {curriculumId: this.$route.params.id}
       }).then((res) => {
         this.form = res.data.mCurriculum
-        this.fileList.push({url: this.form.curriculumImg})
-        this.fileList3.push({url: this.form.videoIntroduction})
-        var urls = this.form.rotationChart.split(',')
-        if (urls) {
-          urls.forEach((itm) => {
-            this.fileList2.push({url: itm})
-          })
+        if (this.form.rotationChart) {
+          this.images = this.form.rotationChart.split(',')
         }
       })
     }
@@ -217,67 +207,6 @@ export default {
     })
   },
   methods: {
-    removePic(file, fileList) {
-      this.fileList = []
-      this.form.curriculumImg = null
-    },
-    uploadPic(response, file, fileList) {
-      this.fileList.push({url: this.qnImg +  response.key})
-      this.form.curriculumImg = this.qnImg +  response.key
-    },
-    beUpload(file, fileList) {
-      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png') {
-        this.$message.error('上传图片只能是JPG/PNG格式!')
-        return false
-      }
-      if (file.size / 1024 > 500) {
-        this.$message.error('上传头像图片大小不能超过500KB!')
-        return false
-      }
-      this.qnData.key =  new Date().getTime() + file.name
-      return true
-    },
-    removePic2(file, fileList) {
-      var uid = file.uid
-      var index = -1
-      this.fileList2.forEach((el,idx) => {
-        if (el.uid == uid) index = idx
-      })
-      if (index != -1) this.fileList2.splice(index, 1)
-      this.form.rotationChart = null
-    },
-    uploadPic2(response, file, fileList) {
-      this.fileList2.push({url: this.qnImg +  response.key})
-      // TODO 轮播图素材多张
-    },
-    beUpload2(file, fileList) {
-      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png') {
-        this.$message.error('上传图片只能是JPG/PNG格式!')
-        return false
-      }
-      if (file.size / 1024 > 500) {
-        this.$message.error('上传头像图片大小不能超过500KB!')
-        return false
-      }
-      this.qnData.key =  new Date().getTime() + file.name
-      return true
-    },
-    removePic3(file, fileList) {
-      this.fileList3 = []
-      this.form.videoIntroduction = null
-    },
-    uploadPic3(response, file, fileList) {
-      this.fileList3.push({url: this.qnImg +  response.key})
-      this.form.videoIntroduction = this.qnImg +  response.key
-    },
-    beUpload3(file, fileList) {
-      if (file.type !== 'audio/mp4' && file.type !== 'video/mp4') {
-        this.$message.error('上传视频只能是MP4格式!')
-        return false
-      }
-      this.qnData.key =  new Date().getTime() + file.name
-      return true
-    },
     switchChange(e) {
       if (e) {
         this.rules.numOfLearners = [
@@ -293,11 +222,7 @@ export default {
     },
     add() {
       // 轮播图素材多张
-      var str = ''
-      this.fileList2.forEach((item) => {
-        str += ',' + item.url
-      })
-      this.form.rotationChart = str.substring(1)
+      this.form.rotationChart = this.rotationChart
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.form.videoList = this.videoList

@@ -7,19 +7,17 @@
         </el-col>
       </el-form-item>
       <el-form-item label="轮播图素材" prop="bannerUrl">
-        <el-upload
-          list-type="picture-card"
+        <upload-image
           :action="qnAction"
+          :fileType="['png', 'jpg']"
+          :fileSize="0.5"
           :data="qnData"
-          :file-list="fileList"
-          :on-success="uploadPic"
-          :before-upload="beUpload"
-          :limit="1"
-          accept="image/png, image/jpeg, image/jpg"
-          :on-remove="removePic">
-          <i class="el-icon-plus"></i>
-          <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-        </el-upload>
+          :size="150"
+          thumbSuffix="?imageView2/1/w/150/h/150"
+          accept="image/jpeg,image/png"
+          v-model="form.bannerUrl"
+          :responseFn="(response, file, fileList) => qnImg +  response.key">
+        </upload-image>
       </el-form-item>
       <el-form-item label="轮播图说明" prop="bannerExplain">
       <el-col :span="12">
@@ -41,11 +39,14 @@
 
 <script>
 import request from '@/utils/request'
+import UploadImage from '@/components/UploadImage/UploadImage'
 
 export default {
   data() {
     return {
-      form: {},
+      form: {
+        bannerUrl: ''
+      },
       rules: {
         bannerName: [
           { required: true, message: '请输入内容', trigger: 'blur' }
@@ -64,14 +65,16 @@ export default {
         token: ''
       },
       qnAction: 'http://up.qiniu.com',
-      qnImg: 'http://q8ieryh01.bkt.clouddn.com/',
-      fileList: [],
+      qnImg: 'http://q8ieryh01.bkt.clouddn.com/'
     }
+  },
+  components: {
+    UploadImage
   },
   created() {
     if (this.$route.params.obj) {
       this.form = this.$route.params.obj
-      this.fileList.push({url: this.form.bannerUrl})
+      delete this.form.name
     }
     request({
       url: '/user/qiniu',
@@ -81,26 +84,6 @@ export default {
     })
   },
   methods: {
-    removePic(file, fileList) {
-      this.fileList = []
-      this.form.bannerUrl = null
-    },
-    uploadPic(response, file, fileList) {
-      this.fileList.push({url: this.qnImg +  response.key})
-      this.form.bannerUrl = this.qnImg +  response.key
-    },
-    beUpload(file, fileList) {
-      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png') {
-        this.$message.error('上传图片只能是JPG/PNG格式!')
-        return false
-      }
-      if (file.size / 1024 > 500) {
-        this.$message.error('上传头像图片大小不能超过500KB!')
-        return false
-      }
-      this.qnData.key =  new Date().getTime() + file.name
-      return true
-    },
     add() {
       this.$refs.form.validate((valid) => {
         if (valid) {
