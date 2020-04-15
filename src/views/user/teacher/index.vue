@@ -240,6 +240,22 @@
         </el-tabs>
       </div>
     </el-card>
+    <el-dialog title="分成设置" :visible.sync="dialogFormVisible">
+      <el-form :model="form" :rules="rules" ref="form">
+        <el-form-item label="讲师分成" prop="divideInto">
+          <el-col :span="2">
+            <el-input v-model="form.divideInto"></el-input>
+          </el-col>
+          <el-col :span="2">
+            <span>&nbsp;&nbsp;&nbsp;%</span>
+          </el-col>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveDivideInto">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -266,6 +282,16 @@ export default {
       list3: [],
       listLoading4: true,
       list4: [],
+      dialogFormVisible: false,
+      form: {},
+      rules: {
+        divideInto: [
+          { required: true, trigger: 'blur', validator: (rule, value, callback) => {
+            if (!value) callback(new Error('请输入内容'))
+            else if (!/^(-?\d+)(\.\d+)?$/.test(value)) callback(new Error('请输入数字'))
+            else callback()}}
+        ]
+      }
     }
   },
   filters: {
@@ -379,22 +405,34 @@ export default {
         })
       }
       if (this.activeName === 'four') {
-        request({
-          url: '/lecturer/update_lecturer',
-          method: 'post',
-          data: {
-            mLecturer: {
-              id: row.lecturerId,
-              lecturerType: 2
-            },
-            mUserInfo: {
-              id: row.userId
-            }
-          }
-        }).then((res) => {
-          this.fetchData4()
-        })
+        this.dialogFormVisible = true
+        this.form = {}
+        this.form.lecturerId = row.lecturerId
+        this.form.userId = row.userId
       }
+    },
+    saveDivideInto() {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          request({
+            url: '/lecturer/update_lecturer',
+            method: 'post',
+            data: {
+              mLecturer: {
+                id: this.form.lecturerId,
+                lecturerType: 2,
+                divideInto: this.form.divideInto
+              },
+              mUserInfo: {
+                id: this.form.userId
+              }
+            }
+          }).then((res) => {
+            this.fetchData4()
+            this.dialogFormVisible = false
+          })
+        }
+      })
     },
     handleShangjia(idx,row) {
       if (this.activeName === 'two') {

@@ -47,7 +47,7 @@
           <el-input v-model="form.teacherIntroduce" type="textarea" :rows="5" placeholder="请输入内容" maxlength="100" show-word-limit></el-input>
         </el-form-item>
         <el-form-item label="一级分类" prop="typeA">
-          <el-select ref="typeA" v-model="form.typeA" placeholder="请选择" @change="(e) => {$message.info('e')}">
+          <el-select ref="typeA" v-model="form.typeA" placeholder="请选择">
             <el-option v-for="item in firstList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
