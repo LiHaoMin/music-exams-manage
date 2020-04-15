@@ -99,12 +99,12 @@
               </el-table-column>
               <el-table-column align="center" label="视频所属课程">
                 <template slot-scope="scope">
-                  {{ scope.row.money }} // TODO 视频所属课程
+                  {{ scope.row.curriculumName }}
                 </template>
               </el-table-column>
               <el-table-column align="center" label="具体章节">
                 <template slot-scope="scope">
-                  {{ scope.row.videoPosition }}
+                  第{{ scope.row.videoPosition }}节
                 </template>
               </el-table-column>
               <el-table-column align="center" label="课程封面">
