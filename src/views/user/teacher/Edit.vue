@@ -76,7 +76,8 @@
               :size="150"
               thumbSuffix="?imageView2/1/w/150/h/150"
               accept="image/jpeg,image/png"
-              v-model="form.certificate"
+              v-model="images"
+              multiple
               :responseFn="(response, file, fileList) => qnImg +  response.key">
             </UploadImage>
           </el-col>
@@ -178,7 +179,13 @@ export default {
       },
       qnAction: 'http://up.qiniu.com',
       qnImg: 'http://q8ieryh01.bkt.clouddn.com/',
-      passHolder: ''
+      passHolder: '',
+      images: []
+    }
+  },
+  computed: {
+    certificate() {
+      return this.images.join(',')
     }
   },
   components: {
@@ -200,11 +207,15 @@ export default {
         res.data.mUserInfo.password = null
         this.passHolder = '********'
         this.form = {... res.data.mLecturer, mCreateAccountBean: res.data.mUserInfo}
+        if (this.form.certificate) {
+          this.images = this.form.certificate.split(',')
+        }
       })
     }
   },
   methods: {
     add() {
+      this.form.certificate = this.certificate
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.form.videoList = this.videoList

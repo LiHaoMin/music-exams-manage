@@ -218,7 +218,7 @@
               </el-table-column>
               <el-table-column align="center" label="资质证明">
                 <template slot-scope="scope">
-                  <img :src="scope.row.certificate" />
+                  <img v-if="scope.row.certificate" :src="scope.row.certificate.split(',')[0]" />
                 </template>
               </el-table-column>
               <el-table-column align="center" label="申请时间">
