@@ -106,28 +106,6 @@ export default {
     box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
     border-color: rgba(0, 0, 0, .05);
 
-    &:hover {
-      .card-panel-icon-wrapper {
-        color: #fff;
-      }
-
-      .icon-people {
-        color: #fff;
-      }
-
-      .icon-message {
-        background: #fff;
-      }
-
-      .icon-money {
-        background: #fff;
-      }
-
-      .icon-shopping {
-        background: #fff
-      }
-    }
-
     .icon-people {
       color: #fff;
     }
