@@ -3,7 +3,7 @@
     <div slot="header">营收概况</div>
     <el-row :gutter="40" class="panel-group">
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
+        <div style="background-color: #ff7970" class="card-panel" @click="handleSetLineChartData('newVisitis')">
           <div class="card-panel-icon-wrapper icon-people">
             <svg-icon icon-class="money" class-name="card-panel-icon" />
           </div>
@@ -16,7 +16,7 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('messages')">
+        <div style="background-color: #ffd344" class="card-panel" @click="handleSetLineChartData('messages')">
           <div class="card-panel-icon-wrapper icon-message">
             <svg-icon icon-class="shopping" class-name="card-panel-icon" />
           </div>
@@ -29,7 +29,7 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('purchases')">
+        <div style="background-color: #648cff" class="card-panel" @click="handleSetLineChartData('purchases')">
           <div class="card-panel-icon-wrapper icon-money">
             <svg-icon icon-class="shopping" class-name="card-panel-icon" />
           </div>
@@ -42,7 +42,7 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('shoppings')">
+        <div  style="background-color: #4fccb0" class="card-panel" @click="handleSetLineChartData('shoppings')">
           <div class="card-panel-icon-wrapper icon-shopping">
             <svg-icon icon-class="money" class-name="card-panel-icon" />
           </div>
@@ -101,7 +101,7 @@ export default {
     font-size: 12px;
     position: relative;
     overflow: hidden;
-    color: #666;
+    color: #fff;
     background: #fff;
     box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
     border-color: rgba(0, 0, 0, .05);
@@ -112,36 +112,36 @@ export default {
       }
 
       .icon-people {
-        background: #40c9c6;
+        color: #fff;
       }
 
       .icon-message {
-        background: #36a3f7;
+        background: #fff;
       }
 
       .icon-money {
-        background: #f4516c;
+        background: #fff;
       }
 
       .icon-shopping {
-        background: #34bfa3
+        background: #fff
       }
     }
 
     .icon-people {
-      color: #40c9c6;
+      color: #fff;
     }
 
     .icon-message {
-      color: #36a3f7;
+      color: #fff;
     }
 
     .icon-money {
-      color: #f4516c;
+      color: #fff;
     }
 
     .icon-shopping {
-      color: #34bfa3
+      color: #fff
     }
 
     .card-panel-icon-wrapper {
@@ -165,7 +165,7 @@ export default {
 
       .card-panel-text {
         line-height: 18px;
-        color: rgba(0, 0, 0, 0.45);
+        color: #fff;
         font-size: 16px;
         margin-bottom: 12px;
       }

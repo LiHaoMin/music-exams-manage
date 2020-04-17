@@ -39,7 +39,7 @@
                     <li :key="index" v-for="(item, index) in userProblemList" @click="userClick(item)">
                       <div class="user" :class="{'active': item.active}">
                         <div>
-                          <img :src="item.head_portrait" alt="头像" />
+                          <img :src="item.head_portrait ? item.head_portrait : require('@/assets/avatar.jpg')" alt="头像" />
                         </div>
                         <div>
                           <p>{{item.name}}</p>
@@ -54,7 +54,7 @@
                     <template v-for="(item,index) in messages">
                       <div :key="index" v-if="item.type == 1" class="msg left">
                         <div>
-                          <img :src="item.head_portrait" alt="头像" />
+                          <img :src="item.head_portrait ? item.head_portrait : require('@/assets/avatar.jpg')" alt="头像" />
                         </div>
                         <div>
                           <p>{{item.name}}</p>
@@ -67,7 +67,7 @@
                           <p>{{item.problem}}</p>
                         </div>
                         <div>
-                          <img :src="item.head_portrait" alt="头像" />
+                          <img :src="item.head_portrait ? item.head_portrait : require('@/assets/avatar.jpg')" alt="头像" />
                         </div>
                       </div>
                     </template>
