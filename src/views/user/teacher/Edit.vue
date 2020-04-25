@@ -178,7 +178,7 @@ export default {
         token: ''
       },
       qnAction: 'http://up.qiniu.com',
-      qnImg: 'http://q8ieryh01.bkt.clouddn.com/',
+      qnImg: 'http://static.yinyuebojiangtang.com/',
       passHolder: '',
       images: []
     }

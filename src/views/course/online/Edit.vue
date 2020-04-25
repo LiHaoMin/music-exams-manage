@@ -216,7 +216,7 @@ export default {
         token:  ''
       },
       qnAction: 'http://up.qiniu.com',
-      qnImg: 'http://q8ieryh01.bkt.clouddn.com/',
+      qnImg: 'http://static.yinyuebojiangtang.com/',
       imageUrl: ''
     }
   },
@@ -288,6 +288,7 @@ export default {
       }
     },
     add() {
+      this.form.teacher = this.form.teacherName
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.form.videoList = this.videoList

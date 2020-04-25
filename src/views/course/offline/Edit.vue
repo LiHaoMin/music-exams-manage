@@ -148,6 +148,13 @@ export default {
         teacher: [
           { required: true, message: '请输入内容', trigger: 'blur' }
         ],
+        money: [
+          { required: true, trigger: 'blur', validator: (rule, value, callback) => {
+            if (!value) callback(new Error('请输入内容'))
+            else if (!/^(-?\d+)(\.\d+)?$/.test(value)) callback(new Error('请输入数字'))
+            else callback()}
+          }
+        ],
         teacherTelephone: [
           { required: true, trigger: 'blur', validator: (rule, value, callback) => {
             if (!value) callback(new Error('请输入内容'))
@@ -175,7 +182,7 @@ export default {
         token: ''
       },
       qnAction: 'http://up.qiniu.com',
-      qnImg: 'http://q8ieryh01.bkt.clouddn.com/',
+      qnImg: 'http://static.yinyuebojiangtang.com/',
       images: []
     }
   },
@@ -225,6 +232,7 @@ export default {
     add() {
       // 轮播图素材多张
       this.form.rotationChart = this.rotationChart
+      this.form.teacherName = this.form.teacher
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.form.videoList = this.videoList
