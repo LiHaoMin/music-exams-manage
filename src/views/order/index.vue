@@ -56,7 +56,7 @@
           <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
             <el-tab-pane label="线上课程" name="online">
               <el-table ref="listTable" v-loading="listLoading" :data="list" element-loading-text="加载中..." border fit highlight-current-row>
-                <el-table-column align="center" label="排序">
+                <el-table-column align="center" label="提现">
                   <template slot-scope="scope">
                     <span v-if="scope.row.wxWithdrawal">已提现</span>
                     <el-checkbox class="checkbox-none" :label="scope.$index" v-else></el-checkbox>
@@ -109,7 +109,7 @@
             </el-tab-pane>
             <el-tab-pane label="线下实体课" name="offline">
               <el-table ref="listTable" v-loading="listLoading" :data="list" element-loading-text="加载中..." border fit highlight-current-row>
-                <el-table-column align="center" label="排序">
+                <el-table-column align="center" label="提现">
                   <template slot-scope="scope">
                     <span v-if="scope.row.wxWithdrawal">已提现</span>
                     <el-checkbox class="checkbox-none" :label="scope.$index" v-else></el-checkbox>
@@ -295,13 +295,16 @@ export default {
       var dataList = []
       sc.forEach((el) => {
         var item = this.list[el.value]
-        dataList.push({
-          id: item.id,
-          ownerId: item.ownerId,
-          money: item.money
-        })
+        dataList.push(item.asorderNumber)
       })
       // TODO 提现参数不明
+      request({
+        url: '/order/wx_withdrawal',
+        method: 'post',
+        data: dataList
+      }).then((res) => {
+        this.fetchData()
+      })
     },
     fetchData() {
       this.listLoading = true
