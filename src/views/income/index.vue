@@ -171,6 +171,13 @@ export default {
     },
     add() {
       let sc = document.querySelectorAll('.checkbox-none input[type="checkbox"]:checked')
+      if (!sc || sc.length < 1) {
+        this.$message({
+          type: 'info',
+          message: '未选中行'
+        })
+        return
+      }
       var dataList = []
       sc.forEach((el) => {
         var item = this.list[el.value]
