@@ -295,7 +295,7 @@ export default {
       var dataList = []
       sc.forEach((el) => {
         var item = this.list[el.value]
-        dataList.push(item.asorderNumber)
+        dataList.push(item.id)
       })
       // TODO 提现参数不明
       request({
