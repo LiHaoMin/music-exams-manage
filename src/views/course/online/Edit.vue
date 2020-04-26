@@ -3,7 +3,7 @@
     <el-form ref="form" :rules="rules"  :model="form" label-width="120px">
       <el-col :span="11">
         <el-form-item label="课程名称" prop="curriculumName">
-          <el-input v-model="form.curriculumName"></el-input>
+          <el-input v-model="form.curriculumName" maxlength="20" show-word-limit></el-input>
         </el-form-item>
         <el-form-item label="课程封面" prop="curriculumImg">
           <upload-image
@@ -121,7 +121,6 @@
           <UploadVideo
             :action="qnAction"
             :fileType="['mp4']"
-            :fileSize="50"
             :data="qnData"
             :size="150"
             thumbSuffix="?vframe/jpg/offset/1/w/150/h/150"

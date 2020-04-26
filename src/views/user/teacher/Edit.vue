@@ -4,14 +4,14 @@
       <el-col :span="12">
         <el-form-item label="讲师名称" prop="name">
           <el-col :span="12">
-            <el-input v-model="form.mCreateAccountBean.name"></el-input>
+            <el-input v-model="form.mCreateAccountBean.name" maxlength="20" show-word-limit></el-input>
           </el-col>
         </el-form-item>
       </el-col>
       <el-col :span="12">
         <el-form-item label="讲师尊称" prop="lecturerName">
           <el-col :span="12">
-            <el-input v-model="form.lecturerName"></el-input>
+            <el-input v-model="form.lecturerName" maxlength="20" show-word-limit></el-input>
           </el-col>
         </el-form-item>
       </el-col>

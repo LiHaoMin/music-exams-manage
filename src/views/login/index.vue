@@ -3,7 +3,6 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="head">
-        <img src="@/assets/logo.png" />
         <h3 class="title">音乐考研管理平台</h3>
       </div>
       <div class="title-container">
@@ -17,7 +16,7 @@
         <el-input
           ref="username"
           v-model="loginForm.username"
-          placeholder="Username"
+          placeholder="用户名"
           name="username"
           type="text"
           tabindex="1"
@@ -34,7 +33,7 @@
           ref="password"
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="密码"
           name="password"
           tabindex="2"
           auto-complete="on"
@@ -189,6 +188,7 @@ $light_gray:#eee;
     display: flex;
     align-items: center;
     margin-bottom: 80px;
+    justify-content: center;
   }
   .head h3.title {
     font-size: 30px;
