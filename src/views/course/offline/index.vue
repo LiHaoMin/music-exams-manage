@@ -86,7 +86,7 @@
           </el-table-column>
           <el-table-column align="center" label="操作">
             <template slot-scope="scope">
-              <el-link :underline="false" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-link>
+              <el-link :underline="false" type="primary" @click="handleEdit(scope.$index, scope.row)">{{ scope.row.upperShelf ? '查看' : '编辑' }}</el-link>
               <el-link :underline="false" type="info" @click="handleStatus(scope.$index, scope.row)">{{ !scope.row.upperShelf | states }}</el-link>
               <el-link :underline="false" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-link>
             </template>
@@ -157,7 +157,7 @@ export default {
       this.fetchData()
     },
     handleEdit(idx, row) {
-      this.$router.push({ name: 'offlineEdit', params: { id: row.id }})
+      this.$router.push({ name: 'offlineEdit', query: { id: row.id, upperShelf: row.upperShelf }})
     },
     add() {
       this.$router.push({ name: 'offlineEdit'})

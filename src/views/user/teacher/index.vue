@@ -133,7 +133,7 @@
               </el-table-column>
             </el-table>
             <el-row type="flex" justify="end">
-              <pagination v-show="pagination.total > 0" :total="pagination.total" :page.sync="pagination.num" :limit.sync="pagination.size" @pagination="fetchData" />
+              <pagination v-show="pagination.total > 0" :total="pagination.total" :page.sync="pagination.num" :limit.sync="pagination.size" @pagination="fetchData2" />
             </el-row>
           </el-tab-pane>
           <el-tab-pane label="讲师提现申请" name="three">
@@ -181,7 +181,7 @@
               </el-table-column>
             </el-table>
             <el-row type="flex" justify="end">
-              <pagination v-show="pagination.total > 0" :total="pagination.total" :page.sync="pagination.num" :limit.sync="pagination.size" @pagination="fetchData" />
+              <pagination v-show="pagination.total > 0" :total="pagination.total" :page.sync="pagination.num" :limit.sync="pagination.size" @pagination="fetchData3" />
             </el-row>
           </el-tab-pane>
           <el-tab-pane label="讲师入驻申请审核" name="four">
@@ -234,7 +234,7 @@
               </el-table-column>
             </el-table>
             <el-row type="flex" justify="end">
-              <pagination v-show="pagination.total > 0" :total="pagination.total" :page.sync="pagination.num" :limit.sync="pagination.size" @pagination="fetchData" />
+              <pagination v-show="pagination.total > 0" :total="pagination.total" :page.sync="pagination.num" :limit.sync="pagination.size" @pagination="fetchData4" />
             </el-row>
           </el-tab-pane>
         </el-tabs>

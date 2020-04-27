@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" :style="{'pointer-events': (!this.$route.query.upperShelf ? 'auto': 'none')}">
     <el-form ref="form" :rules="rules"  :model="form" label-width="120px">
       <el-form-item label="实体课名称" prop="curriculumName">
         <el-col :span="12">
@@ -29,6 +29,7 @@
             :fileSize="0.5"
             :data="qnData"
             :size="150"
+            :limit="8"
             thumbSuffix="?imageView2/1/w/150/h/150"
             accept="image/jpeg,image/png"
             v-model="images"
@@ -95,7 +96,6 @@
           <UploadVideo
             :action="qnAction"
             :fileType="['mp4']"
-            :fileSize="50"
             :data="qnData"
             :size="150"
             thumbSuffix="?vframe/jpg/offset/1/w/150/h/150"
@@ -111,7 +111,7 @@
         </el-form-item>
       </el-col>
     </el-form>
-    <el-col :span="24">
+    <el-col :span="24" v-if="!this.$route.query.upperShelf">
       <el-row type="flex" justify="end">
         <el-button type="success" @click="add">确认添加</el-button>
         <el-button @click="cancel">取消</el-button>
@@ -196,13 +196,14 @@ export default {
     UploadImage
   },
   created() {
-    if (this.$route.params.id) {
+    if (this.$route.query.id) {
       request({
         url: '/curriculum/inquiry_course',
         method: 'get',
-        params: {curriculumId: this.$route.params.id}
+        params: {curriculumId: this.$route.query.id}
       }).then((res) => {
         this.form = res.data.mCurriculum
+        this.form.typeA = this.form.typeA.toString()
         if (this.form.rotationChart) {
           this.images = this.form.rotationChart.split(',')
         }

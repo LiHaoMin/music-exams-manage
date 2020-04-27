@@ -244,6 +244,7 @@ export default {
     },
     save() {
       this.form.mCreateAccountBean.userEnable = true
+      this.form.lecturerType = 2
       request({
         url: '/user/add_lecturer',
         method: 'post',

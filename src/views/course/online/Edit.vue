@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" :style="{'pointer-events': (!this.$route.query.upperShelf ? 'auto': 'none')}">
     <el-form ref="form" :rules="rules"  :model="form" label-width="120px">
       <el-col :span="11">
         <el-form-item label="课程名称" prop="curriculumName">
@@ -106,7 +106,7 @@
         <el-col :span="6"><el-button type="primary" @click="addVideo">新增</el-button></el-col>
       </el-row>
     </el-col>
-    <el-col :span="24">
+    <el-col :span="24" v-if="!this.$route.query.upperShelf">
       <el-row type="flex" justify="end">
         <el-button type="success" @click="add">确认添加</el-button>
         <el-button @click="cancel">取消</el-button>
@@ -225,11 +225,11 @@ export default {
   },
   created() {
     this.getFirstList()
-    if (this.$route.params.id) {
+    if (this.$route.query.id) {
       request({
         url: '/curriculum/inquiry_course',
         method: 'get',
-        params: {curriculumId: this.$route.params.id}
+        params: {curriculumId: this.$route.query.id}
       }).then((res) => {
         this.form = res.data.mCurriculum
         this.form.typeB = res.data.mCurriculum.typeB+""
@@ -291,7 +291,7 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.form.videoList = this.videoList
-          if (this.$route.params.id) {
+          if (this.$route.query.id) {
             this.edit()
           } else  {
             this.save()
