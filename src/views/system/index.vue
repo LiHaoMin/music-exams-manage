@@ -37,8 +37,8 @@
           </el-table-column>
           <el-table-column align="center" label="操作">
             <template slot-scope="scope">
-              <el-link :underline="false" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-link>
-              <el-link :underline="false" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-link>
+              <el-link :underline="false" v-if="scope.row.account !== 'admin'" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-link>
+              <el-link :underline="false" v-if="scope.row.account !== 'admin'" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-link>
             </template>
           </el-table-column>
         </el-table>

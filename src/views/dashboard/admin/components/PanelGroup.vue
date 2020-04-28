@@ -11,7 +11,7 @@
             <div class="card-panel-text">
               今日订单收入
             </div>
-            <count-to :start-val="0" :end-val="form.dayMoney" :duration="2600" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="form.dayMoney" decimals="2" :duration="2600" class="card-panel-num" />
           </div>
         </div>
       </el-col>
@@ -50,7 +50,7 @@
             <div class="card-panel-text">
               当月订单收入
             </div>
-            <count-to :start-val="0" :end-val="form.monthMoney" :duration="3600" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="form.monthMoney" decimals="2" :duration="3600" class="card-panel-num" />
           </div>
         </div>
       </el-col>

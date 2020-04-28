@@ -198,6 +198,7 @@ export default {
         ]
       },
       videoList: [],
+      videoDelList: [],
       videoForm: {},
       videoFormRules: {
         videoName: [
@@ -261,7 +262,7 @@ export default {
   },
   filters: {
     videoType(data) {
-      const list = ['', '待审核', '审核不通过', '已上架', '', '已下架']
+      const list = ['', '待审核', '审核不通过', '已上架', '已下架']
       return data ? list[data] : '待审核'
     },
     videoTime(data) {
@@ -327,6 +328,13 @@ export default {
         method: 'post',
         data: videoListData
       })
+      if (this.videoDelList.length > 0) {
+        await request({
+          url: '/video',
+          method: 'post',
+          data: this.videoDelList
+        })
+      }
       this.$router.replace({name:'online'})
     },
     cancel() {
@@ -357,21 +365,11 @@ export default {
       })
     },
     deleteVideo(idx, item) {
-      if (!item.id) {
-        this.videoList.splice(idx, 1)
-        return
+      if (item.id) {
+        item.isDelete = true
+        this.videoDelList.push(item)
       }
-      request({
-        url: '/video',
-        method: 'post',
-        data: [{
-          curriculumId: item.curriculumId,
-          id: item.id,
-          isDelete: true
-        }]
-      }).then((res) => {
-        this.videoList.splice(idx, 1)
-      })
+      this.videoList.splice(idx, 1)
     },
     getFirstList() {
       request({

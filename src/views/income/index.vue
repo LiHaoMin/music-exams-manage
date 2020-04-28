@@ -71,12 +71,12 @@
           </el-table-column>
           <el-table-column align="center" label="购买课程">
             <template slot-scope="scope">
-              {{ scope.row.asorderNumber }}
+              {{ scope.row.curriculumName }}
             </template>
           </el-table-column>
           <el-table-column align="center" label="购买昵称">
             <template slot-scope="scope">
-              {{ scope.row.curriculumName }}
+              {{ scope.row.userName }}
             </template>
           </el-table-column>
           <el-table-column align="center" label="已付费">

@@ -2,6 +2,7 @@
   <div class="ele-upload-image">
     <!-- 上传组件 -->
     <el-upload
+      :file-list="computedFiles"
       :accept="accept"
       :action="action"
       :before-upload="handleBeforeUpload"
@@ -215,6 +216,15 @@ export default {
     }
   },
   computed: {
+    computedFiles () {
+      var files = []
+      for (var i = 0; i < this.value.length; i++) {
+        files.push({
+          status: 'success'
+        })
+      }
+      return files
+    },
     // 是否显示提示
     showTip () {
       return this.isShowTip && (this.fileType.length || this.fileSize)

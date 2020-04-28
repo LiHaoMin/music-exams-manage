@@ -201,8 +201,8 @@ export default {
     saveHelp() {
       request({
         url: '/help/update_help',
-        method: 'get',
-        params: this.helpForm
+        method: 'post',
+        data: this.helpForm
       }).then((res) => {
         if (res.data) {
           this.$message('保存成功')

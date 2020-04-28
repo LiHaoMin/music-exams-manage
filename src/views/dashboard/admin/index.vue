@@ -15,7 +15,7 @@
           营收统计
           <el-row>
             <el-col :span="3" :offset="3">本月订单总数：{{monthTotal}}</el-col>
-            <el-col :span="3" :offset="1">本月订单总额：￥{{monthAmount}}</el-col>
+            <el-col :span="3" :offset="1">本月订单总额：￥{{monthAmount ? monthAmount.toFixed(2) : 0.00}}</el-col>
             <el-col :span="3" :offset="11" style="text-align: right"><span style="color: #40c9c6;font-weight: bold;margin-right: 15px">本月</span> <strong>{{new Date().getFullYear()}}年</strong></el-col>
           </el-row>
         </div>

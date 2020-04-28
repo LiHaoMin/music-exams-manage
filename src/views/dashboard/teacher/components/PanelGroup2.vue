@@ -37,7 +37,7 @@
             <div class="card-panel-text">
               总营收
             </div>
-            <count-to :start-val="0" :end-val="form.money" :duration="3200" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="form.money" decimals="2" :duration="3200" class="card-panel-num" />
           </div>
         </div>
       </el-col>
@@ -50,7 +50,7 @@
             <div class="card-panel-text">
               平台余额
             </div>
-            <count-to :start-val="0" :end-val="form.balance" :duration="3600" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="form.balance" decimals="2" :duration="3600" class="card-panel-num" />
           </div>
         </div>
       </el-col>

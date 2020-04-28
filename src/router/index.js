@@ -85,7 +85,7 @@ export const asyncRoutes = [
         name: 'onlineEdit',
         hidden: true,
         component: () => import('@/views/course/online/Edit'),
-        meta: { title: '', roles: ['2'] }
+        meta: { title: '线上课程', roles: ['2'] }
       },
       {
         path: 'offline',
@@ -98,7 +98,7 @@ export const asyncRoutes = [
         name: 'offlineEdit',
         hidden: true,
         component: () => import('@/views/course/offline/Edit'),
-        meta: { title: '', roles: ['2'] }
+        meta: { title: '线下课程', roles: ['2'] }
       }
     ]
   },
