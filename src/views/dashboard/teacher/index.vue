@@ -99,7 +99,7 @@ export default {
         }
       })
       Object.keys(chartData).forEach((item) => {
-        this.lineChartData.expectedData.push(chartData[item])
+        this.lineChartData.expectedData.push(chartData[item] ? chartData[item].toFixed(2) : 0)
         this.lineChartData.actualData.push(item)
       })
     })
