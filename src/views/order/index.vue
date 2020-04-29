@@ -99,7 +99,7 @@
                 </el-table-column>
                 <el-table-column align="center" label="提现时间">
                   <template slot-scope="scope">
-                    {{ scope.row.cashWithdrawalApplyTime | date}}
+                    {{ scope.row.wxTime | date}}
                   </template>
                 </el-table-column>
               </el-table>
@@ -147,7 +147,7 @@
                 </el-table-column>
                 <el-table-column align="center" label="提现时间">
                   <template slot-scope="scope">
-                    {{ scope.row.cashWithdrawalApplyTime | date}}
+                    {{ scope.row.wxTime | date}}
                   </template>
                 </el-table-column>
                 <el-table-column align="center" label="操作">

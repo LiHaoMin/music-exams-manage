@@ -202,7 +202,7 @@ export default {
       request({
         url: '/help/update_help',
         method: 'post',
-        data: this.helpForm
+        data: this.helpForm.content
       }).then((res) => {
         if (res.data) {
           this.$message('保存成功')
