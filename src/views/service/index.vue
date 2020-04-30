@@ -202,6 +202,9 @@ export default {
       request({
         url: '/help/update_help',
         method: 'post',
+        headers: {
+          'Content-Type': 'application/json;charset=utf8'
+        },
         data: this.helpForm.content
       }).then((res) => {
         if (res.data) {
