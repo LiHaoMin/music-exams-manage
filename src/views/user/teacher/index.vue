@@ -176,8 +176,7 @@
               <el-table-column align="center" label="选择线下打款状态">
                 <template slot-scope="scope">
                   <el-link :underline="false" type="primary" v-if="scope.row.cashWithdrawalTime">已付款</el-link>
-                  <el-link :underline="false" type="info" v-if="!scope.row.cashWithdrawalTime && scope.row.cashWithdrawalApplyTime">申请中</el-link>
-                  <el-link :underline="false" type="danger" @click="handlePay(scope.$index, scope.row)" v-if="!scope.row.cashWithdrawalTime && !scope.row.cashWithdrawalApplyTime">未付款</el-link>
+                  <el-link :underline="false" type="danger" @click="handlePay(scope.$index, scope.row)" v-else>未付款</el-link>
                 </template>
               </el-table-column>
             </el-table>
