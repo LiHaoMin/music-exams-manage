@@ -66,13 +66,13 @@ export default {
         account: [
           { required: true, trigger: 'blur', validator: (rule, value, callback) => {
             if (!value) callback(new Error('请输入内容'))
-            else if (!/^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$/.test(value)) callback(new Error('6至20位，以字母开头，字母，数字，减号，下划线'))
+            else if (!/^\w+$/.test(value)) callback(new Error('只能由英文、数字、下划线组成'))
             else callback()} }
         ],
         password: [
           { required: true, trigger: 'blur', validator: (rule, value, callback) => {
             if (!value && !this.$route.params.id) callback(new Error('请输入内容'))
-            else if (value && !/^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/.test(value)) callback(new Error('最少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符'))
+            else if (value && !/^\w+$/.test(value)) callback(new Error('只能由英文、数字、下划线组成'))
             else callback()} }
         ],
         checkPass: [
@@ -84,7 +84,7 @@ export default {
         telephone: [
           { required: true, trigger: 'blur', validator: (rule, value, callback) => {
             if (!value) callback(new Error('请输入内容'))
-            else if (!/^[1][3,4,5,7,8][0-9]{9}$/.test(value)) callback(new Error('请输入正确的手机号'))
+            else if (!/^[1][0-9]{10}$/.test(value)) callback(new Error('请输入正确的手机号'))
             else callback()} }
         ],
         adminType: [

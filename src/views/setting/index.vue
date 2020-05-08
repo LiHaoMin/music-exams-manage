@@ -34,7 +34,7 @@ export default {
         password: [
           { required: true, trigger: 'blur', validator: (rule, value, callback) => {
             if (!value) callback(new Error('请输入内容'))
-            else if (!/^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/.test(value)) callback(new Error('最少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符'))
+            else if (!/^\w+$/.test(value)) callback(new Error('只能由英文、数字、下划线组成'))
             else callback()}
           }
         ]

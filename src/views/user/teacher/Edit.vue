@@ -157,13 +157,13 @@ export default {
         account: [
           { required: true, trigger: 'blur', validator: (rule, value, callback) => {
             if (!this.form.mCreateAccountBean.account) callback(new Error('请输入内容'))
-            else if (!/^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$/.test(this.form.mCreateAccountBean.account)) callback(new Error('6至20位，以字母开头，字母，数字，减号，下划线'))
+            else if (!/^\w+$/.test(this.form.mCreateAccountBean.account)) callback(new Error('只能由英文、数字、下划线组成'))
             else callback()} }
         ],
         password: [
           { required: true, trigger: 'blur', validator: (rule, value, callback) => {
             if (!this.form.mCreateAccountBean.password && !this.$route.params.id) callback(new Error('请输入内容'))
-            else if (this.form.mCreateAccountBean.password && !/^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/.test(this.form.mCreateAccountBean.password)) callback(new Error('最少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符'))
+            else if (this.form.mCreateAccountBean.password && !/^\w+$/.test(this.form.mCreateAccountBean.password)) callback(new Error('只能由英文、数字、下划线组成'))
             else callback()} }
         ],
         divideInto: [

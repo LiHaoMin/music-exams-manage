@@ -158,7 +158,7 @@ export default {
         teacherTelephone: [
           { required: true, trigger: 'blur', validator: (rule, value, callback) => {
             if (!value) callback(new Error('请输入内容'))
-            else if (!/^[1][3,4,5,7,8][0-9]{9}$/.test(value)) callback(new Error('请输入正确的手机号'))
+            else if (!/^[1][0-9]{10}$/.test(value)) callback(new Error('请输入正确的手机号'))
             else callback()}
           }
         ],
