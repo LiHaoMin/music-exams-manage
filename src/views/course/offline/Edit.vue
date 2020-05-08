@@ -11,7 +11,6 @@
           <UploadImage
             :action="qnAction"
             :fileType="['png', 'jpg']"
-            :fileSize="0.5"
             :data="qnData"
             :size="150"
             thumbSuffix="?imageView2/1/w/150/h/150"
@@ -26,7 +25,6 @@
           <UploadImage
             :action="qnAction"
             :fileType="['png', 'jpg']"
-            :fileSize="0.5"
             :data="qnData"
             :size="150"
             :limit="8"
