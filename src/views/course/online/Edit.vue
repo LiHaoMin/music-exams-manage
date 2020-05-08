@@ -350,6 +350,8 @@ export default {
         if (valid) {
           this.videoForm.videoPosition = this.videoList.length + 1
           this.videoForm.type = 1
+          if (this.form.userId)
+            this.videoForm.userId = this.form.userId
           this.dialogFormVisible = false
           // 时长
           request({

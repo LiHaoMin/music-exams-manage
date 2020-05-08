@@ -287,7 +287,7 @@ export default {
         method: 'get',
         params: {orderId: row.id}
       }).then((res) => {
-        this.currentRow = res.data
+        this.currentRow = res.data || {}
       })
     },
     add() {
