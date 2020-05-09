@@ -96,6 +96,7 @@
             :fileType="['mp4']"
             :data="qnData"
             :size="150"
+            :http-request="uploadFile"
             thumbSuffix="?vframe/jpg/offset/1/w/150/h/150"
             accept="video/mp4,audio/mp4"
             v-model="form.videoIntroduction"
@@ -122,6 +123,7 @@
 import request from '@/utils/request'
 import UploadImage from '@/components/UploadImage/UploadImage'
 import UploadVideo from "@/components/UploadVideo/UploadVideo"
+import * as qiniu from 'qiniu-js'
 
 export default {
   data() {
@@ -181,7 +183,8 @@ export default {
       },
       qnAction: 'http://up.qiniu.com',
       qnImg: 'http://static.yinyuebojiangtang.com/',
-      images: []
+      images: [],
+      subscription: null
     }
   },
   computed: {
@@ -245,6 +248,9 @@ export default {
     },
     cancel() {
       this.$router.replace({name:'offline'})
+      if (this.subscription) {
+        this.subscription.unsubscribe()
+      }
     },
     save() {
       // const typeA = [0,51,52,53]
@@ -264,6 +270,38 @@ export default {
         data: this.form
       }).then((res) => {
         this.$router.replace({name:'offline'})
+      })
+    },
+    uploadFile(option) {
+      const fileName = this.changeFileName(option.file.name)
+
+      const qnPutextra = {
+        fname: '',
+        params: {},
+        mimeType: null
+      }
+      const qnConfig = {
+        useCdnDomain: true,
+        disableStatisticsReport: false,
+        retryCount: 6,
+        region: qiniu.region.z0
+      }
+      const observable = qiniu.upload(
+        option.file,
+        fileName,
+        this.qnData.token,
+        qnPutextra,
+        qnConfig
+      )
+      this.subscription = observable.subscribe({
+        next: option.onProgress,
+        error: option.onError,
+        complete: option.onSuccess
+      })
+    },
+    changeFileName(filename) {
+      return filename.replace(/.[a-zA-Z0-9]+$/, (match) => {
+        return `-${Date.now()}${match}`
       })
     }
   }

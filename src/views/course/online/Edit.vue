@@ -111,7 +111,7 @@
         <el-button @click="cancel">取消</el-button>
       </el-row>
     </el-col>
-    <el-dialog :title="'第' + (videoList.length + 1) + '节'" :visible.sync="dialogFormVisible">
+    <el-dialog :title="'第' + (videoList.length + 1) + '节'" :visible.sync="dialogFormVisible" :close-on-click-modal='false'>
       <el-form ref="videoForm" :model="videoForm" :rules="videoFormRules" label-position="top">
         <el-form-item label="课时名称" prop="videoName">
           <el-input v-model="videoForm.videoName" autocomplete="off"></el-input>
@@ -122,6 +122,7 @@
             :fileType="['mp4']"
             :data="qnData"
             :size="150"
+            :http-request="uploadFile"
             thumbSuffix="?vframe/jpg/offset/1/w/150/h/150"
             accept="video/mp4,audio/mp4"
             v-model="videoForm.videoUrl"
@@ -130,7 +131,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button @click="videoCancle">取 消</el-button>
         <el-button type="primary" @click="saveVideo">立即添加</el-button>
       </div>
     </el-dialog>
@@ -142,6 +143,7 @@ import request from '@/utils/request'
 import UploadImage from '@/components/UploadImage/UploadImage'
 import UploadVideo from "@/components/UploadVideo/UploadVideo"
 import { mapGetters } from 'vuex'
+import * as qiniu from 'qiniu-js'
 
 export default {
   data() {
@@ -216,7 +218,8 @@ export default {
       },
       qnAction: 'http://up.qiniu.com',
       qnImg: 'http://static.yinyuebojiangtang.com/',
-      imageUrl: ''
+      imageUrl: '',
+      subscription: null
     }
   },
   components: {
@@ -396,6 +399,44 @@ export default {
         }
       }).then((res) => {
         this.firstList2 = res.data.records
+      })
+    },
+    videoCancle() {
+      this.dialogFormVisible = false
+      if (this.subscription) {
+        this.subscription.unsubscribe()
+      }
+    },
+    uploadFile(option) {
+      const fileName = this.changeFileName(option.file.name)
+
+      const qnPutextra = {
+        fname: '',
+        params: {},
+        mimeType: null
+      }
+      const qnConfig = {
+        useCdnDomain: true,
+        disableStatisticsReport: false,
+        retryCount: 6,
+        region: qiniu.region.z0
+      }
+      const observable = qiniu.upload(
+        option.file,
+        fileName,
+        this.qnData.token,
+        qnPutextra,
+        qnConfig
+      )
+      this.subscription = observable.subscribe({
+        next: option.onProgress,
+        error: option.onError,
+        complete: option.onSuccess
+      })
+    },
+    changeFileName(filename) {
+      return filename.replace(/.[a-zA-Z0-9]+$/, (match) => {
+        return `-${Date.now()}${match}`
       })
     }
   }

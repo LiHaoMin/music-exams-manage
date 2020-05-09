@@ -210,7 +210,7 @@ export default {
 
     // 上传进度
     handleUploadProcess (event, file) {
-      this.videoUploadPercent = Number(file.percentage.toFixed(0))
+      this.videoUploadPercent = Number(event.total.percent.toFixed(0))
     },
 
     // 上传成功
