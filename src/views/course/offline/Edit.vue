@@ -235,7 +235,7 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.form.videoList = this.videoList
-          if (this.$route.params.id) {
+          if (this.$route.query.id) {
             this.edit()
           } else  {
             this.save()
