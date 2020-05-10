@@ -218,6 +218,7 @@ export default {
   computed: {
     computedFiles () {
       var files = []
+      if (this.value == null) return files;
       for (var i = 0; i < this.value.length; i++) {
         files.push({
           status: 'success'
